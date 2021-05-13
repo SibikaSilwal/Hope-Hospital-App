@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/mitemAdmin_globalDocs"
+        android:title="Global Documents"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/mitemAdmin_SearchPatients"
+        android:title="Search Patients"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/mitemAdmin_ManageGroup"
+        android:title="Manage Wards"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/mitemAdmin_Appointment"
+        android:title="Appointment"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/mitemAdmin_homeIcon"
+        android:title="home"
+        android:icon="@drawable/ic_home"
+        app:showAsAction="ifRoom" />
+
+</menu>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp"
+    android:elevation="5dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/profileavatar"
+            android:id="@+id/imgplaceholder"
+            android:layout_centerVertical="true"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"/>
+
+        <TextView
+            android:id="@+id/t_usersName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Full Name"
+            android:layout_toRightOf="@+id/imgplaceholder"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/t_usersPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone number"
+            android:layout_toRightOf="@+id/imgplaceholder"
+            android:layout_below="@+id/t_usersName"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"
+             />
+
+        <TextView
+            android:id="@+id/t_usersEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email Address"
+            android:layout_toRightOf="@+id/imgplaceholder"
+            android:layout_below="@+id/t_usersPhone"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"
+            />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

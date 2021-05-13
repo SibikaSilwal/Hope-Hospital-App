@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp"
+    android:elevation="5dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/i_pdfthumb1"
+            android:layout_width="77dp"
+            android:layout_height="100dp"
+            app:srcCompat="@drawable/pdficon" />
+
+        <TextView
+            android:id="@+id/t_GlobalDocName1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="0dp"
+            android:gravity="center_horizontal"
+            android:text="Privacy Policy Document"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/b_GDocChange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/t_GlobalDocName1"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toEndOf="@+id/i_pdfthumb1"
+            android:layout_toRightOf="@+id/i_pdfthumb1"
+            android:text="Change"
+            android:textSize="12sp"
+            app:backgroundTint="@color/button2" />
+
+        <Button
+            android:id="@+id/b_GDocDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/t_GlobalDocName1"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:text="Delete"
+            android:textSize="12sp"
+            app:backgroundTint="@color/button2" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
