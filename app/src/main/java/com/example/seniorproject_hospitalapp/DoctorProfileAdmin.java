@@ -7,6 +7,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;
+//import android.widget.TimePicker;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+//import com.wdullaer.materialdatetimepicker.time.TimePickerDialog ;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -58,10 +61,10 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
     CircleImageView m_Img;
     String m_DocID, m_DoctorWard, m_DocProfileURL;
     TextView m_FullName, m_Email, m_Phone, m_AvailFrom, m_AvailTo, m_DocWardList;
-    Button m_SetAvailBtn;
+    Button m_SetAvailBtn, m_DocAppointmentsBtn;
     CheckBox m_Sunday, m_Monday, m_Tuesday, m_Wednesday, m_Thursday, m_Friday, m_Saturday;
     Spinner m_Wards;
-    Timestamp m_StartTime, m_EndTime;
+    private TimePickerDialog timePickerDialog;// = new TimePickerDialog();
     static Integer m_StartHour, m_StartMinute , m_EndHour, m_EndMinute, m_NewStartTime, m_NewEndTime;
     static Boolean setAvailability = false;
     public ArrayList<String> checkedList = new ArrayList<String>() ;
@@ -79,6 +82,7 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
         setContentView(R.layout.activity_doctor_profile_admin);
         SetupUI();
         setSupportActionBar(m_mainToolBar);
+
         m_AvailFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,34 +164,16 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
         Fetchdata();
 
         m_Wards.setOnItemSelectedListener(this);
-    }
 
-    /*public  boolean   CheckAvailOverlap(String a_day){
-        System.out.println("this was called 1");
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        m_DocAppointmentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                List<Map<String, Object>> DayAvailability = (List<Map<String, Object>>) documentSnapshot.getData().get(a_day);
-                if (DayAvailability != null) {
-                    for (Map<String, Object> avail : DayAvailability) {
-                        long AvailStart = (long)avail.get("StartHour") * 60 + (long)avail.get("StartMinute");
-                        long AvailEnd = (long)avail.get("EndHour") * 60 + (long)avail.get("EndMinute");
-                        //(StartA <= EndB) and (EndA >= StartB)
-                        if((AvailStart<= m_NewEndTime) && (AvailEnd>=m_NewStartTime)){
-                            setAvailability = false;
-                        }else{
-                            setAvailability = true;
-                            System.out.println(a_day+ " :: " + setAvailability );
-                        }
-                    }
-                }else{
-                    setAvailability = true;
-                    System.out.println(a_day+ " here " + setAvailability );
-                }
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), ManageDocAppointment.class);
+                i.putExtra("docID", m_DocID); //sending the data in key value pair to updateprofile activity
+                startActivity(i);
             }
         });
-        return setAvailability;
-    } //don't need this */
+    }
 
     public void onCheckboxClicked(){
         if (m_Sunday.isChecked())
@@ -234,8 +220,11 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
                         m_NewStartTime = m_StartHour * 60 + m_StartMinute;
                     }
                 };
-                new TimePickerDialog(DoctorProfileAdmin.this,android.R.style.Theme_Holo_Light_Dialog_MinWidth, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),false).show();
-            }
+
+              timePickerDialog = new TimePickerDialog(DoctorProfileAdmin.this,android.R.style.Theme_Holo_Light_Dialog_MinWidth, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),false);
+              timePickerDialog.setTitle("Select availability start time.");
+              timePickerDialog.show();
+    }
 
     public void SelectEndTime(TextView a_DateTimeTextView){
         final Calendar calendar = Calendar.getInstance();
@@ -370,6 +359,7 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
         m_AvailFrom = findViewById(R.id.t_availfrom);
         m_AvailTo = findViewById(R.id.t_availTo);
         m_SetAvailBtn = findViewById(R.id.b_setAvail);
+        m_DocAppointmentsBtn = findViewById(R.id.b_manageDocAppt);
 
         m_Sunday = findViewById(R.id.SundayCB);
         m_Monday = findViewById(R.id.MondayCB);

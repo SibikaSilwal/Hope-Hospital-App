@@ -5,6 +5,12 @@
    >
 
     <item
+        android:id="@+id/mitem_documents"
+        android:title="View Documents"
+        app:showAsAction="never"
+        android:tooltipText="View Documents"
+        />
+    <item
         android:id="@+id/mitem_settings"
         android:title="@string/settings"
         app:showAsAction="never"
@@ -21,4 +27,10 @@
         android:title="home"
         android:icon="@drawable/ic_home"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mitem_journal"
+        android:title="My Journal"
+        app:showAsAction="never"
+        android:tooltipText="My Journal"
+        />
 </menu>

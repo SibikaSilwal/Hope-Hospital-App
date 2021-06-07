@@ -37,11 +37,17 @@ public class GlobalMenuActivity extends AppCompatActivity
             case R.id.mitem_homeIcon:
                 startActivity(new Intent(getApplicationContext(), HomePage.class));
                 return true;
+            case R.id.mitem_documents:
+                startActivity(new Intent(getApplicationContext(), ViewUserDocuments.class));
+                return true;
             case R.id.mitem_settings:
                 startActivity(new Intent(getApplicationContext(), SettingsPage.class));
                 return true;
             case R.id.mitem_profile:
                 startActivity(new Intent(getApplicationContext(), UserProfile.class));
+                return true;
+            case R.id.mitem_journal:
+                startActivity(new Intent(getApplicationContext(), UserJournalActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

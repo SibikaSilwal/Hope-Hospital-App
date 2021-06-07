@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,7 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,7 +28,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.SnapshotMetadata;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.okhttp.internal.DiskLruCache;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomePage extends GlobalMenuActivity {
     TextView m_fullName, m_email, m_verifyEmailMsg, m_Message;
@@ -45,6 +52,24 @@ public class HomePage extends GlobalMenuActivity {
         //toolbar
         setSupportActionBar(m_mainToolBar);
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            //Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            System.out.println("token not generated");
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        System.out.println("token: "+token);
+                        Map<String, Object> deviceToken = new HashMap<>();
+                        deviceToken.put("token", token);
+                        docReference.update(deviceToken);
+                    }
+                });
 
         if(!fAuth.getCurrentUser().isEmailVerified()){
             m_verifyButton.setVisibility(View.VISIBLE);
@@ -74,8 +99,15 @@ public class HomePage extends GlobalMenuActivity {
 
     }
 
-    //private void setSupportActionBar(Toolbar m_mainToolBar) {
-    //}
+    /*@Override
+    public void onNewToken(String token) {
+        //Log.d(TAG, "Refreshed token: " + token);
+
+        // If you want to send messages to this application instance or
+        // manage this apps subscriptions on the server side, send the
+        // FCM registration token to your app server.
+        sendRegistrationToServer(token);
+    }*/
 
     public void Logout(View a_view){
         FirebaseAuth.getInstance().signOut();
@@ -105,5 +137,7 @@ public class HomePage extends GlobalMenuActivity {
         });
 
     }
+
+
 }
 

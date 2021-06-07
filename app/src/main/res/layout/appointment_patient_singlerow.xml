@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp"
+    android:elevation="5dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/DoctorImage"
+            android:src="@drawable/profileavatar"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"/>
+
+        <TextView
+            android:id="@+id/t_apptDoctorName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Doctor's Name"
+            android:layout_toRightOf="@+id/DoctorImage"
+            android:layout_marginLeft="20dp"
+            />
+        <TextView
+            android:id="@+id/t_apptDoctorEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Doctor's Email"
+            android:layout_toRightOf="@+id/DoctorImage"
+            android:layout_below="@+id/t_apptDoctorName"
+            android:layout_marginLeft="20dp"
+            />
+        <TextView
+            android:id="@+id/t_apptDoctorPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Patient's Phone"
+            android:layout_toRightOf="@+id/DoctorImage"
+            android:layout_below="@+id/t_apptDoctorEmail"
+            android:layout_marginLeft="20dp"
+            />
+        <TextView
+            android:id="@+id/t_apptTimePatient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Appointment Time"
+            android:layout_toRightOf="@+id/DoctorImage"
+            android:layout_below="@+id/t_apptDoctorPhone"
+            android:layout_marginLeft="20dp"
+            />
+
+        <Button
+            android:id="@+id/b_cancelApptPatient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/DoctorImage"
+            android:layout_marginLeft="0dp"
+            android:backgroundTint="@color/button2"
+            android:text="Cancel Appointment"
+            android:layout_centerHorizontal="true"
+            android:textSize="12sp"
+            />
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

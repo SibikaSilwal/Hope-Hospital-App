@@ -12,7 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SeniorProjectHospitalApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DoctorProfileAdmin"></activity>
+        <activity android:name=".UserJournalActivity"></activity>
+        <activity android:name=".ViewUserDocuments" />
+        <activity android:name=".ManageDocAppointment" />
+        <activity android:name=".DoctorProfileAdmin" />
         <activity android:name=".SearchDoctorsAdmin" />
         <activity android:name=".Appointment" />
         <activity android:name=".ManageGroupAdmin" />
@@ -33,6 +36,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="false"
+            android:stopWithTask="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/button" />
     </application>
 
 </manifest>

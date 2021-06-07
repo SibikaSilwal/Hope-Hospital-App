@@ -52,7 +52,6 @@ public class GlobalDocRecViewAdapter extends FirestoreRecyclerAdapter<GlobalDocM
         holder.m_pdfthumb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("filename: "+  model.getFile());
                 Intent intent = new Intent(holder.m_pdfthumb.getContext(), PdfViewer.class);
                 intent.putExtra("fileURL", model.getFile());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

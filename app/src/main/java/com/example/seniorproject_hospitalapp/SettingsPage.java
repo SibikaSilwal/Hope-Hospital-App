@@ -9,7 +9,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,6 +24,7 @@ import com.google.firebase.firestore.MetadataChanges;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +33,10 @@ public class SettingsPage extends GlobalMenuActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     DocumentReference docReference;
-
-    TextView m_myWardsTxtView, m_myAppoinment;
+    ArrayList<Map<String, Object>> m_appInfo = new ArrayList<Map<String, Object>>();
+    TextView m_myWardsTxtView;
+    RecyclerView m_myApptsRecView;
+    AppointmentManagerPatientAdapter m_adapter;
     String m_myWards=" ", m_UserID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,8 @@ public class SettingsPage extends GlobalMenuActivity {
         setSupportActionBar(m_mainToolBar);
         GetWardList();
         GetAppointmentInfo();
+        System.out.println("appt infot: "+m_appInfo);
+        m_myApptsRecView.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
@@ -68,18 +76,13 @@ public class SettingsPage extends GlobalMenuActivity {
             @Override
             public void onEvent(@com.google.firebase.database.annotations.Nullable DocumentSnapshot snapshot,
                                 @Nullable FirebaseFirestoreException e) {
-                Map<String, String> appInfo =  (Map<String, String>) snapshot.getData().get("AppointmentInfo");
-
-                if(appInfo!= null){
-                    String DocName = appInfo.get("Doctor");
-                    String Day =appInfo.get("Day");
-                    String Time = appInfo.get("Time");
-                    System.out.println("appinfo: " +appInfo);
-                    String apptinfo = "Doctor: " + DocName +"\n" + "Day: " + Day + "\n" + "Time: " + Time;
-                    m_myAppoinment.setText(apptinfo);
-                }
+                m_appInfo = (ArrayList<Map<String, Object>>) snapshot.getData().get("AppointmentsInfo");
+                System.out.println("appt info2: "+m_appInfo);
+                m_adapter = new AppointmentManagerPatientAdapter(m_appInfo, SettingsPage.this);
+                m_myApptsRecView.setAdapter(m_adapter);
+                m_adapter.notifyDataSetChanged();
+                System.out.println("adapter set");
             }
-
         });
     }
 
@@ -87,12 +90,11 @@ public class SettingsPage extends GlobalMenuActivity {
         m_mainToolBar= findViewById(R.id.mtoolbar);
         m_mainToolBar.setTitle("Hope Hospital App");
         m_myWardsTxtView = findViewById(R.id.t_yourwards);
-        m_myAppoinment = findViewById(R.id.t_apptInfo);
+        m_myApptsRecView = findViewById(R.id.recviewApptPatients);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         m_UserID = fAuth.getUid();
         docReference = fStore.collection("users").document(m_UserID);
-
     }
 
 

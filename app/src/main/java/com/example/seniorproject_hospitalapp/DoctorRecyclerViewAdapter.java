@@ -30,6 +30,8 @@ public class DoctorRecyclerViewAdapter extends FirestoreRecyclerAdapter<DoctorDa
         holder.DocImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("Sunday: "+ model.getSunday());
+                System.out.println("Monday: "+ model.getMonday());
                 Intent intent = new Intent(holder.DocImg.getContext(), DoctorProfileAdmin.class);
                 intent.putExtra("DocId", model.getDocID());
                 intent.putExtra("DocName", model.getDocName());

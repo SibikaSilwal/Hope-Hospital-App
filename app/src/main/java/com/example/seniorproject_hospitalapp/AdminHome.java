@@ -46,30 +46,6 @@ public class AdminHome extends AdminMenuActivity {
         SetupUI();
         setSupportActionBar(m_mainToolBar);
 
-
-
-        /*save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(AdminHome.this, "Checking toast", Toast.LENGTH_SHORT).show();
-                newMsg = msg.getText().toString();
-                DocumentReference df = fStore.collection("GlobalDoc").document("PrivacyPolicyDocs");
-                Map<String, Object> message = new HashMap<>();
-                message.put("msg1", newMsg);
-                df.set(message).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(AdminHome.this, "Operation Successful", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AdminHome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });*/
-
         m_DocSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

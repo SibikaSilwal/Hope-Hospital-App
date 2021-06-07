@@ -25,10 +25,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.skyhope.eventcalenderlibrary.CalenderEvent;
 import com.skyhope.eventcalenderlibrary.listener.CalenderDayClickListener;
 import com.skyhope.eventcalenderlibrary.model.DayContainerModel;
@@ -39,6 +42,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +54,7 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
     Spinner m_docNameSpinner;
     TextView m_PatientName, m_PatientEmail, m_PatientPhone;
     RecyclerView m_AppointmentTimeRecView;
+    DocAvailabilityAdapter m_adapter;
 
     ArrayList<String> m_wards = new ArrayList<>();
     ArrayList<String> m_DocIDs = new ArrayList<>();
@@ -57,7 +62,8 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
     ArrayList<Map<String, Object>> m_DocAvail = new ArrayList<>();
     ArrayAdapter<String> m_DocNameArrAdapter;
 
-    //m_DocAvail: [{Sunday=16:52-17:52}, {Monday=16:52-17:52}, {Monday=18:52-19:52}]
+    //DOC ID AND NAME MAP
+    Map<String, String> m_docIDdocNameMap = new HashMap<>();
     String m_userID;
     FirebaseFirestore fstore;
     //FirebaseAuth fauth;
@@ -66,8 +72,14 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
         SetupUI();
+        Thread t1 = new Thread(new Runnable() {
+            public void run()
+            {
+                CreateDocNameDocIdMap();
+            }});
+        t1.start();
+
         setSupportActionBar(m_mainToolBar);
-        GetDoctorsforWard(m_wards);
 
         m_DocName.add("Select Doctor.");
         GetDoctorsforWard(m_wards);
@@ -82,9 +94,12 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         m_AppointmentTimeRecView.setLayoutManager(layoutManager);
-        m_AppointmentTimeRecView.setAdapter(new DocAvailabilityAdapter(m_DocAvail));
+        m_adapter = new DocAvailabilityAdapter(m_DocAvail, Appointment.this);
+
+        m_AppointmentTimeRecView.setAdapter(m_adapter);
 
     }
+
 
 
     private void GetDoctorsforWard(ArrayList<String> a_Wardlist) {
@@ -102,12 +117,15 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
                                 docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        //m_DocIDs.add(DocId);
                                         m_DocName.add(task.getResult().get("DocName").toString());
+                                        System.out.println("Docid: "+ DocId + "DocName: "+task.getResult().get("DocName").toString());
                                     }
                                 });
                             }
                         }
                     }
+                    System.out.println("Docid: "+ m_DocIDs + "DocName: "+m_DocName);
                 }
             });
         }
@@ -146,8 +164,8 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
                 m_DocAvail.add(DocandUserID);
 
                 //if(available!=null){m_DocAvail.add(available);}
-                System.out.println(a_docID + " AVailability: "+ m_DocAvail);
-                m_AppointmentTimeRecView.setAdapter(new DocAvailabilityAdapter(m_DocAvail));
+                //System.out.println(a_docID + " AVailability: "+ m_DocAvail);
+                m_AppointmentTimeRecView.setAdapter(new DocAvailabilityAdapter(m_DocAvail, Appointment.this));
             }
         });
     }
@@ -157,7 +175,7 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
         if(parent.getItemAtPosition(position).equals("Select Doctor.")){
             //do nothing
         }else{
-            GetDocAvail(m_DocIDs.get(position-1));
+            GetDocAvail(m_docIDdocNameMap.get(m_DocName.get(position)));
         }
 
     }
@@ -167,6 +185,20 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
 
     }
 
+    private void CreateDocNameDocIdMap(){
+        CollectionReference docref = fstore.collection("Doctors");
+        docref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        m_docIDdocNameMap.put(document.get("DocName").toString(),document.get("DocID").toString());
+                    }
+                }
+                System.out.println("aLL DOCTORS: "+ m_docIDdocNameMap);
+            }
+        });
+    }
     private void SetupUI(){
         m_mainToolBar = findViewById(R.id.mtoolbar);
         m_mainToolBar.setTitle("Hope Hospital App");
@@ -178,5 +210,6 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
         m_wards = getIntent().getStringArrayListExtra("wards");
         m_userID = getIntent().getStringExtra("patientID");
         fstore = FirebaseFirestore.getInstance();
+
     }
 }
