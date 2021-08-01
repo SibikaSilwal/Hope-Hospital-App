@@ -1,6 +1,7 @@
 package com.example.seniorproject_hospitalapp;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +36,7 @@ public class AppointmentManagerPatientAdapter extends RecyclerView.Adapter<Appoi
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     String m_userID = fAuth.getUid();
+    String m_docEmail, m_docPhone;
     ArrayList<Map<String, Object>> data = new ArrayList<>();
 
     public AppointmentManagerPatientAdapter(ArrayList<Map<String, Object>> data, Context a_context) {
@@ -50,8 +54,13 @@ public class AppointmentManagerPatientAdapter extends RecyclerView.Adapter<Appoi
 
     @Override
     public void onBindViewHolder(@NonNull holder holder, int position) {
-        holder.DoctorName.setText(data.get(position).get("Doctor").toString());
+        holder.DoctorName.setText("Dr. "+data.get(position).get("Doctor").toString());
+        GetDoctorInfo(position, holder);
         holder.ApptTime.setText(data.get(position).get("Day").toString()+" "+data.get(position).get("Time").toString());
+        if((Long.parseLong(data.get(position).get("reminderTime").toString()))+3600000< Calendar.getInstance().getTimeInMillis()){
+            holder.PastAppointment.setVisibility(View.VISIBLE);
+            holder.CancelAppt.setVisibility(View.GONE);
+        }
         holder.CancelAppt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +77,25 @@ public class AppointmentManagerPatientAdapter extends RecyclerView.Adapter<Appoi
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    private void GetDoctorInfo(int a_position, holder a_holder){
+        Map<String, String> DocInfo = new HashMap<>();
+        DocumentReference docrefDoctor = fStore.collection("Doctors").document(data.get(a_position).get("DoctorID").toString());
+        docrefDoctor.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.getResult().get("DocEmail")!=null) {
+                    a_holder.DoctorEmail.setText(task.getResult().get("DocEmail").toString());
+                }
+                if(task.getResult().get("DocPhone")!=null){
+                    a_holder.DoctorPhone.setText(task.getResult().get("DocPhone").toString());
+                }
+                if(task.getResult().get("profileURL")!=null){
+                    Picasso.get().load(task.getResult().get("profileURL").toString()).into(a_holder.DoctorImg);
+                }
+            }
+        });
     }
 
     private synchronized void RemoveApppointments(int position){
@@ -122,7 +150,7 @@ public class AppointmentManagerPatientAdapter extends RecyclerView.Adapter<Appoi
     class holder extends RecyclerView.ViewHolder
     {
         CircleImageView DoctorImg;
-        TextView DoctorName, DoctorPhone, DoctorEmail, ApptTime;
+        TextView DoctorName, DoctorPhone, DoctorEmail, ApptTime, PastAppointment;
         Button CancelAppt;
         public holder(@NonNull View itemView) {
             super(itemView);
@@ -131,6 +159,7 @@ public class AppointmentManagerPatientAdapter extends RecyclerView.Adapter<Appoi
             DoctorPhone= (TextView)itemView.findViewById(R.id.t_apptDoctorPhone);
             DoctorEmail = (TextView)itemView.findViewById(R.id.t_apptDoctorEmail);
             ApptTime = (TextView)itemView.findViewById(R.id.t_apptTimePatient);
+            PastAppointment = (TextView)itemView.findViewById(R.id.t_pastAppointment);
             CancelAppt = (Button) itemView.findViewById(R.id.b_cancelApptPatient);
         }
     }

@@ -15,6 +15,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@drawable/bottom_right_curved_background"
+        android:backgroundTint="#8B008B"
+        android:elevation="4dp"
+        android:paddingBottom="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mtoolbar">
@@ -25,27 +29,46 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="Add New Ward"
-            android:textColor="@color/heading2"
-            android:textSize="18sp" />
+            android:fontFamily="@font/hind_regular"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
-        <EditText
-            android:id="@+id/e_newwardname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName" />
-
-        <Button
-            android:id="@+id/b_chooseWardIcon"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:text="Select Icon"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <EditText
+                android:id="@+id/e_newwardname"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="Ward Name"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:padding="5dp"
+                android:inputType="textPersonName"
+                android:background="@drawable/customized_input_box"/>
+            <ImageView
+                android:id="@+id/b_chooseWardIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/wards"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/b_newWard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Ward"
+            android:onClick="AddNewWard"
             android:layout_gravity="center_horizontal"
-            android:textSize="14sp"
-            app:backgroundTint="@color/button2" />
+            android:fontFamily="@font/hind_regular"
+            android:textSize="12sp"
+            android:background="@drawable/border_around"
+            app:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
 
 
 
@@ -53,9 +76,9 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recViewward"
-        android:layout_width="413dp"
-        android:layout_height="545dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="194dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />

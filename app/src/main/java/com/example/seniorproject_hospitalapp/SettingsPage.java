@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -25,50 +27,31 @@ import com.google.firebase.firestore.MetadataChanges;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class SettingsPage extends GlobalMenuActivity {
+public class SettingsPage extends AppCompatActivity {
     private Toolbar m_mainToolBar;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     DocumentReference docReference;
     ArrayList<Map<String, Object>> m_appInfo = new ArrayList<Map<String, Object>>();
-    TextView m_myWardsTxtView;
     RecyclerView m_myApptsRecView;
+    LinearLayout m_appointmentsLayout;
     AppointmentManagerPatientAdapter m_adapter;
-    String m_myWards=" ", m_UserID;
+    String m_UserID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_page);
         SetupUI();
         setSupportActionBar(m_mainToolBar);
-        GetWardList();
         GetAppointmentInfo();
         System.out.println("appt infot: "+m_appInfo);
         m_myApptsRecView.setLayoutManager(new LinearLayoutManager(this));
 
-    }
-
-    private void GetWardList(){
-        docReference.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@com.google.firebase.database.annotations.Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                List<Object> wardNames = (List<Object>) snapshot.getData().get("WardName");
-                System.out.println(wardNames);
-                if(wardNames!= null){
-                    for( Object wardname: wardNames)
-                    {
-                        m_myWards = m_myWards.concat("\n"+wardname.toString()) ;
-                    }
-                    m_myWardsTxtView.setText(m_myWards);
-                    m_myWards ="";
-                }
-            }
-
-        });
     }
 
     private void GetAppointmentInfo(){
@@ -76,24 +59,40 @@ public class SettingsPage extends GlobalMenuActivity {
             @Override
             public void onEvent(@com.google.firebase.database.annotations.Nullable DocumentSnapshot snapshot,
                                 @Nullable FirebaseFirestoreException e) {
-                m_appInfo = (ArrayList<Map<String, Object>>) snapshot.getData().get("AppointmentsInfo");
-                System.out.println("appt info2: "+m_appInfo);
-                m_adapter = new AppointmentManagerPatientAdapter(m_appInfo, SettingsPage.this);
-                m_myApptsRecView.setAdapter(m_adapter);
-                m_adapter.notifyDataSetChanged();
-                System.out.println("adapter set");
+                if(snapshot.getData().get("AppointmentsInfo")!=null){
+                    m_appInfo = (ArrayList<Map<String, Object>>) snapshot.getData().get("AppointmentsInfo");
+                    Collections.reverse(m_appInfo);
+                    System.out.println("appt info2: "+m_appInfo);
+                    m_adapter = new AppointmentManagerPatientAdapter(m_appInfo, SettingsPage.this);
+                    m_myApptsRecView.setAdapter(m_adapter);
+                    m_adapter.notifyDataSetChanged();
+                    System.out.println("adapter set");
+                }
             }
         });
     }
 
+    public void SetMargins (View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        }
+    }
+
     private void SetupUI(){
         m_mainToolBar= findViewById(R.id.mtoolbar);
-        m_mainToolBar.setTitle("Hope Hospital App");
-        m_myWardsTxtView = findViewById(R.id.t_yourwards);
+        m_mainToolBar.setTitle("");
         m_myApptsRecView = findViewById(R.id.recviewApptPatients);
+        m_appointmentsLayout = findViewById(R.id.upcomingapptLinearLayout);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        m_UserID = fAuth.getUid();
+        if(getIntent().getStringExtra("patientID")!=null){
+            m_UserID=getIntent().getStringExtra("patientID");
+        }else{
+            m_UserID = fAuth.getUid();
+        }
         docReference = fStore.collection("users").document(m_UserID);
     }
 

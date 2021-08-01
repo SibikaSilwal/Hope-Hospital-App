@@ -6,9 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.app.DatePickerDialog;
+import android.widget.DatePicker;
 //import android.widget.TimePicker;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+//import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 //import com.wdullaer.materialdatetimepicker.time.TimePickerDialog ;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,7 +23,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -57,15 +62,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView.OnItemSelectedListener{
+    private LinearLayout m_LinearLayoutDocAppt, m_LinearLyaoutEditDocProfile;
     Toolbar m_mainToolBar;
     CircleImageView m_Img;
-    String m_DocID, m_DoctorWard, m_DocProfileURL;
-    TextView m_FullName, m_Email, m_Phone, m_AvailFrom, m_AvailTo, m_DocWardList;
-    Button m_SetAvailBtn, m_DocAppointmentsBtn;
-    CheckBox m_Sunday, m_Monday, m_Tuesday, m_Wednesday, m_Thursday, m_Friday, m_Saturday;
+    String m_DocID, m_DoctorWard, m_DocProfileURL, m_selectDate;
+    TextView m_FullName, m_Email, m_Phone, m_AvailFrom, m_AvailTo, m_DocWardList, m_OpenEditDoctorProfile;
+    EditText m_EditDocPhone, m_EditDocEmail, m_EditDocBio;
+    Button m_SetAvailBtn, m_DocAppointmentsBtn, m_datePickBtn;
     Spinner m_Wards;
+    LinearLayout m_EditDoctorProfileLayout;
+    private DatePickerDialog m_datePickerDialog;
     private TimePickerDialog timePickerDialog;// = new TimePickerDialog();
-    static Integer m_StartHour, m_StartMinute , m_EndHour, m_EndMinute, m_NewStartTime, m_NewEndTime;
+    static Integer m_StartHour, m_StartMinute , m_EndHour, m_EndMinute, m_StartTime, m_EndTime,m_Month, m_Year, m_DayOfMonth;
     static Boolean setAvailability = false;
     public ArrayList<String> checkedList = new ArrayList<String>() ;
 
@@ -82,6 +90,7 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
         setContentView(R.layout.activity_doctor_profile_admin);
         SetupUI();
         setSupportActionBar(m_mainToolBar);
+        InitDatePicker();
 
         m_AvailFrom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,10 +106,30 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
         });
         m_SetAvailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                checkedList.clear();
-                onCheckboxClicked();
-                System.out.println(checkedList);
+            public synchronized void onClick(View v) {
+                System.out.println("date: "+m_selectDate);
+                if(m_selectDate==null || m_StartHour == null){
+                    System.out.println("returning");
+                    Toast.makeText(getApplicationContext(), "Please select both Date and Time.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //check if time is formatted correctly
+                if((m_StartHour*60 + m_StartMinute)>(m_EndHour*60+m_EndMinute)){
+                    Toast.makeText(getApplicationContext(), "Start time cannot be greater than end time!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String day = m_selectDate;
+                //getting reminder millisecond
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR,m_Year);
+                calendar.set(Calendar.MONTH, m_Month);
+                calendar.set(Calendar.DAY_OF_MONTH, m_DayOfMonth);
+                calendar.set(Calendar.HOUR_OF_DAY, m_StartHour);
+                calendar.set(Calendar.MINUTE, m_StartMinute);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.add(Calendar.HOUR, -1);
+                Long reminderTime = calendar.getTimeInMillis();
                 //AvailData
                 Map<String, Object> AvailabilityData = new HashMap<>();
                 AvailabilityData.put("Time", m_StartHour+":"+m_StartMinute+"-"+m_EndHour+":"+m_EndMinute);
@@ -110,41 +139,42 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
                 AvailabilityData.put("StartMinute", m_StartMinute);
                 AvailabilityData.put("EndHour", m_EndHour);
                 AvailabilityData.put("EndMinute", m_EndMinute);
-                    for(int i =0; i<checkedList.size(); i++) {
-                        String day = checkedList.get(i);
+                AvailabilityData.put("ReminderTime", reminderTime);
 
-                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                List<Map<String, Object>> DayAvailability = (List<Map<String, Object>>) task.getResult().get(day);
-                                if (DayAvailability != null) {
-                                    for (Map<String, Object> avail : DayAvailability) {
-                                        long AvailStart = (long)avail.get("StartHour") * 60 + (long)avail.get("StartMinute");
-                                        long AvailEnd = (long)avail.get("EndHour") * 60 + (long)avail.get("EndMinute");
-                                        //(StartA <= EndB) and (EndA >= StartB)
-                                        if((AvailStart<= m_NewEndTime) && (AvailEnd>=m_NewStartTime)){
-                                            setAvailability = false;
-                                            // check thisssssssssssss......DayAvailability.clear();
-                                        }else{
-                                            setAvailability = true;
-                                        }
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            List<Map<String, Object>> DayAvailability = (List<Map<String, Object>>) task.getResult().get(day);
+                            if (DayAvailability != null) {
+                                for (Map<String, Object> avail : DayAvailability) {
+                                    long AvailStart = (long)avail.get("StartHour") * 60 + (long)avail.get("StartMinute");
+                                    long AvailEnd = (long)avail.get("EndHour") * 60 + (long)avail.get("EndMinute");
+                                    //(StartA <= EndB) and (EndA >= StartB)
+                                    if((AvailStart<= m_EndTime) && (AvailEnd>=m_StartTime)){
+                                        setAvailability = false;
+                                        System.out.println("can't set");
+                                        Toast.makeText(getApplicationContext(), "Can't set Availability. Availability overlaps with the existing availability.", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }else{
+                                        setAvailability = true;
                                     }
-                                }else{
-                                    setAvailability = true;
                                 }
-                                if(setAvailability){
-                                    docRef.update(day, FieldValue.arrayUnion(AvailabilityData));
-                                    Toast.makeText(getApplicationContext(), "Availability set.", Toast.LENGTH_SHORT).show();
-                                }
-                                else{
-                                    System.out.println("Availability overlaps with the existing availability.");
-                                    Toast.makeText(getApplicationContext(), "Can't set Availability. Availability overlaps with the existing availability.", Toast.LENGTH_SHORT).show();
-                                }
+                            }else{
+                                setAvailability = true;
                             }
+                            if(setAvailability){
+                                docRef.update(day, FieldValue.arrayUnion(AvailabilityData));
+                                Toast.makeText(getApplicationContext(), "Availability set.", Toast.LENGTH_SHORT).show();
+                            }
+                            /*else{
+                                System.out.println("Availability overlaps with the existing availability.");
+                                Toast.makeText(getApplicationContext(), "Can't set Availability.", Toast.LENGTH_SHORT).show();
+                            }*/
+                        }
 
-                        });
+                    });
 
-                    }
+                //}
                 }
         });
 
@@ -157,6 +187,16 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
             }
         });
 
+        /*m_OpenEditDoctorProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(m_EditDoctorProfileLayout.getVisibility()==View.GONE){
+                    m_EditDoctorProfileLayout.setVisibility(View.VISIBLE);
+                }else{
+                    m_EditDoctorProfileLayout.setVisibility(View.GONE);
+                }
+            }
+        });*/
         m_WardNamelist = new ArrayList<String>();
         m_WardNamelist.add("Select a Ward.");
         m_wardNameArrAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, m_WardNamelist);
@@ -165,45 +205,55 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
 
         m_Wards.setOnItemSelectedListener(this);
 
-        m_DocAppointmentsBtn.setOnClickListener(new View.OnClickListener() {
+        /*m_DocAppointmentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(v.getContext(), ManageDocAppointment.class);
                 i.putExtra("docID", m_DocID); //sending the data in key value pair to updateprofile activity
                 startActivity(i);
             }
-        });
+        });*/
     }
 
-    public void onCheckboxClicked(){
-        if (m_Sunday.isChecked())
-        {
-            checkedList.add("Sunday");
+    public void DoctorAppointments(View a_view){
+        Intent i = new Intent(a_view.getContext(), ManageDocAppointment.class);
+        i.putExtra("docID", m_DocID); //sending the data in key value pair to updateprofile activity
+        startActivity(i);
+    }
+    public void EditDoctorProfile(View a_view){
+        if(m_EditDoctorProfileLayout.getVisibility()==View.GONE){
+            m_EditDoctorProfileLayout.setVisibility(View.VISIBLE);
+        }else{
+            m_EditDoctorProfileLayout.setVisibility(View.GONE);
         }
-        if (m_Monday.isChecked())
-        {
-            checkedList.add("Monday");
-        }
-        if (m_Tuesday.isChecked())
-        {
-            checkedList.add("Tuesday");
-        }
-        if (m_Wednesday.isChecked())
-        {
-            checkedList.add("Wednesday");
-        }
-        if (m_Thursday.isChecked())
-        {
-            checkedList.add("Thursday");
-        }
-        if (m_Friday.isChecked())
-        {
-            checkedList.add("Friday");
-        }
-        if (m_Saturday.isChecked())
-        {
-            checkedList.add("Saturday");
-        }
+    }
+    public void InitDatePicker()
+    {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        //String Todaysdate = makeDateString(day,month+1, year);
+        //m_selectDate=Todaysdate;
+        m_datePickBtn.setText("Please select a date.");
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                m_Month = month;
+                m_Year = year;
+                m_DayOfMonth = dayOfMonth;
+                m_selectDate = makeDateString(dayOfMonth,month+1, year);
+                System.out.println("being called? " + m_selectDate);
+                m_datePickBtn.setText(m_selectDate);
+            }
+        };
+        int style = AlertDialog.THEME_HOLO_LIGHT;
+
+        m_datePickerDialog = new DatePickerDialog(this, style, dateSetListener, year, month, day);
+        m_datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis()- 10000);
+    }
+    public void OpenDatePicker(View view){
+        m_datePickerDialog.show();
     }
 
     public void SelectStartTime(TextView a_DateTimeTextView){
@@ -217,7 +267,7 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
                         a_DateTimeTextView.setText(hourOfDay + ":" + minute);
                         m_StartHour = hourOfDay;
                         m_StartMinute = minute;
-                        m_NewStartTime = m_StartHour * 60 + m_StartMinute;
+                        m_StartTime = m_StartHour * 60 + m_StartMinute;
                     }
                 };
 
@@ -237,10 +287,45 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
                 a_DateTimeTextView.setText(hourOfDay + ":" + minute);
                 m_EndHour = hourOfDay;
                 m_EndMinute = minute;
-                m_NewEndTime = m_EndHour * 60 + m_EndMinute;
+                m_EndTime = m_EndHour * 60 + m_EndMinute;
             }
         };
         new TimePickerDialog(DoctorProfileAdmin.this,android.R.style.Theme_Holo_Light_Dialog_MinWidth, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),false).show();
+    }
+    public String makeDateString(int day, int month, int year)
+    {
+        return getMonthFormat(month) + " " + day + " " + year;
+    }
+
+    public String getMonthFormat(int month)
+    {
+        if(month == 1)
+            return "JAN";
+        if(month == 2)
+            return "FEB";
+        if(month == 3)
+            return "MAR";
+        if(month == 4)
+            return "APR";
+        if(month == 5)
+            return "MAY";
+        if(month == 6)
+            return "JUN";
+        if(month == 7)
+            return "JUL";
+        if(month == 8)
+            return "AUG";
+        if(month == 9)
+            return "SEP";
+        if(month == 10)
+            return "OCT";
+        if(month == 11)
+            return "NOV";
+        if(month == 12)
+            return "DEC";
+
+        //default should never happen
+        return "JAN";
     }
 
     private void Fetchdata(){
@@ -338,36 +423,58 @@ public class DoctorProfileAdmin extends AdminMenuActivity implements AdapterView
         });
     }
 
+    public void EditDocProfile(View view){
+        Map<String, Object> DocProfile = new HashMap<>();
+        DocProfile.put("DocEmail", m_EditDocEmail.getText().toString());
+        DocProfile.put("DocPhone", m_EditDocPhone.getText().toString());
+        DocProfile.put("DocBio", m_EditDocBio.getText().toString());
+        docRef.update(DocProfile);
+        Toast.makeText(this, "Doctor's profile updated.", Toast.LENGTH_SHORT);
+    }
     private void SetupUI() {
         m_mainToolBar = findViewById(R.id.mtoolbar);
-        m_mainToolBar.setTitle("Hope Hospital App");
+        m_mainToolBar.setTitle("");
         m_FullName = findViewById(R.id.t_DocFullName1);
-        m_Email = findViewById(R.id.t_DocEmail);
+        m_Email = findViewById(R.id.t_DocEmail1);
+        m_Phone= findViewById(R.id.t_DocPhone1);
         m_Img = findViewById(R.id.placeholderIMGDoc);
-        m_FullName.setText(getIntent().getStringExtra("DocName").toString());
-        //m_Email.setText(getIntent().getStringExtra("uEmail").toString());
-        //m_Phone.setText(getIntent().getStringExtra("uPhone").toString());
-        m_DocID= getIntent().getStringExtra("DocId").toString();
-        if(getIntent().getStringExtra("DocProfileUrl")!=null){
-            m_DocProfileURL = getIntent().getStringExtra("DocProfileUrl").toString();
-        }
+        m_FullName.setText(getIntent().getStringExtra("DocName"));
 
+        //m_OpenEditDoctorProfile = findViewById(R.id.t_editDocProfile);
+        m_EditDoctorProfileLayout = findViewById(R.id.Expandable_Layout);
+        m_EditDocEmail = findViewById(R.id.e_DocEmail);
+        m_EditDocPhone = findViewById(R.id.e_DocPhone);
+        m_EditDocBio = findViewById(R.id.e_DocBio);
+        m_DocID= getIntent().getStringExtra("DocId");
+        if(getIntent().getStringExtra("DocProfileUrl")!=null){
+            m_DocProfileURL = getIntent().getStringExtra("DocProfileUrl");
+        }
         if(m_DocProfileURL!=null && m_DocProfileURL!=""){
             Picasso.get().load(m_DocProfileURL).into(m_Img);
         }
 
+        //setting Doctor's email, phone, and bio
+        if(getIntent().getStringExtra("DocEmail")!=null){
+            m_Email.setText(getIntent().getStringExtra("DocEmail"));
+            m_EditDocEmail.setText(getIntent().getStringExtra("DocEmail"));
+        }
+        if(getIntent().getStringExtra("DocPhone")!=null){
+            m_Phone.setText(getIntent().getStringExtra("DocPhone"));
+            m_EditDocPhone.setText(getIntent().getStringExtra("DocPhone"));
+        }
+        if(getIntent().getStringExtra("DocBio")!=null){
+            m_EditDocBio.setText(getIntent().getStringExtra("DocBio"));
+        }
         m_AvailFrom = findViewById(R.id.t_availfrom);
         m_AvailTo = findViewById(R.id.t_availTo);
         m_SetAvailBtn = findViewById(R.id.b_setAvail);
-        m_DocAppointmentsBtn = findViewById(R.id.b_manageDocAppt);
+        m_LinearLayoutDocAppt = findViewById(R.id.linearLayoutDocAppt);
+        m_LinearLyaoutEditDocProfile = findViewById(R.id.linearLayoutEditDocProfile);
+        //m_DocAppointmentsBtn = findViewById(R.id.b_manageDocAppt);
+        m_datePickBtn = findViewById(R.id.b_datePickerBtn);
 
-        m_Sunday = findViewById(R.id.SundayCB);
-        m_Monday = findViewById(R.id.MondayCB);
-        m_Tuesday = findViewById(R.id.TuesdayCB);
-        m_Wednesday = findViewById(R.id.WednesdayCB);
-        m_Thursday = findViewById(R.id.ThursdayCB);
-        m_Friday = findViewById(R.id.FridayCB);
-        m_Saturday = findViewById(R.id.SaturdayCB);
+
+
 
         m_DocWardList = findViewById(R.id.t_docWardList);
         m_Wards = findViewById(R.id.spinnerDocWard);

@@ -29,9 +29,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UserProfile extends GlobalMenuActivity {
     TextView m_fullName, m_email, m_phone;
-    ImageView m_profileImg;
+    CircleImageView m_profileImg;
     Button m_changeProfileBtn;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;

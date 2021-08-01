@@ -51,7 +51,8 @@ public class GlobalDocAdmin extends AdminMenuActivity {
     private EditText m_DocName;
     private TextView m_GlobalDocName;
     private Button m_changeFileBtn, m_uploadFileBtn, m_deleteFileBtn;
-    private ImageView m_ViewPDFBtn;
+    private ImageView m_PDFicon;
+    private Uri m_newFileURI;
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private StorageReference storageReference, m_fileRef;
@@ -79,7 +80,7 @@ public class GlobalDocAdmin extends AdminMenuActivity {
         m_recviewAdapter = new GlobalDocRecViewAdapter(options, GlobalDocAdmin.this);
         m_recview.setAdapter(m_recviewAdapter);
 
-        m_uploadFileBtn.setOnClickListener(new View.OnClickListener() {
+        m_PDFicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 m_fileName= m_DocName.getText().toString(); //uploading document's filename
@@ -110,7 +111,7 @@ public class GlobalDocAdmin extends AdminMenuActivity {
         Intent chooserIntent = Intent.createChooser(getIntent, "Select File");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
 
-        startActivityForResult(chooserIntent, 2000);
+        startActivityForResult(chooserIntent, 2001);
     }
 
     //overriding the onactivityresult function, the "data" attribute has the img_uri,
@@ -121,13 +122,30 @@ public class GlobalDocAdmin extends AdminMenuActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==2000){
             if(resultCode == Activity.RESULT_OK){ //do we have any result on the data? so check
+                //Uri imageUri = data.getData();
+                m_newFileURI= data.getData();
+                //m_profileImage.setImageURI(imageUri);
+                //UploadImagetoFirebase(imageUri, m_fileName);
+            }
+        }
+        if(requestCode==2001){
+            if(resultCode == Activity.RESULT_OK){ //do we have any result on the data? so check
                 Uri imageUri = data.getData();
+                //m_newFileURI= data.getData();
                 //m_profileImage.setImageURI(imageUri);
                 UploadImagetoFirebase(imageUri, m_fileName);
             }
         }
     }
-
+    public void AddNewDocument(View a_view){
+        if(m_newFileURI==null||m_fileName==null){
+            Toast.makeText(GlobalDocAdmin.this, "Please make sure to choose a file and enter filename.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        UploadImagetoFirebase(m_newFileURI,m_fileName);
+        m_DocName.setText("");
+        Toast.makeText(GlobalDocAdmin.this, "New ward was created successfully.", Toast.LENGTH_SHORT).show();
+    }
     private void UploadImagetoFirebase(Uri a_imageuri, String a_fileName) {
         StorageReference fileRef = storageReference.child("GlobalDoc/"+a_fileName+"file.pdf");
         fileRef.putFile(a_imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -161,6 +179,7 @@ public class GlobalDocAdmin extends AdminMenuActivity {
         m_recview = findViewById(R.id.globaldocreyclerview);
         m_recview.setLayoutManager(new LinearLayoutManager(this));
         m_uploadFileBtn = findViewById(R.id.b_GdocUpload);
+        m_PDFicon=findViewById(R.id.globalDocFileIcon);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();

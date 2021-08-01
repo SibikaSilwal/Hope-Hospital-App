@@ -45,6 +45,7 @@ public class DocAvailabilityAdapter extends RecyclerView.Adapter<DocAvailability
     public void onBindViewHolder(@NonNull holder holder, int position) {
         holder.day.setText(data.get(position).get("day").toString());
         holder.time.setText(data.get(position).get("time").toString());
+        holder.reminderTime.setText(data.get(position).get("reminderTime").toString());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +67,7 @@ public class DocAvailabilityAdapter extends RecyclerView.Adapter<DocAvailability
                                 Map<String, Object> apptinfo = new HashMap<>();
                                 apptinfo.put("Time", holder.time.getText().toString());
                                 apptinfo.put("Day", holder.day.getText().toString());
+                                apptinfo.put("reminderTime", holder.reminderTime.getText());
                                 apptinfo.put("Doctor", data.get(data.size() -1).get("Doctor"));
                                 apptinfo.put("DoctorID", data.get(data.size() -1).get("docID"));
                                 //docrefUser.update("AppointmentInfo", apptinfo);
@@ -79,6 +81,7 @@ public class DocAvailabilityAdapter extends RecyclerView.Adapter<DocAvailability
                                         System.out.println("Size after remove "+ (data.size() -1) );
                                     }
                                 });
+                                docrefUser.update("newReminderTime", holder.reminderTime.getText());
                                 Toast.makeText(m_context, "Appointment set for "+holder.day.getText().toString() +" "+holder.time.getText().toString(), Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -99,10 +102,12 @@ public class DocAvailabilityAdapter extends RecyclerView.Adapter<DocAvailability
     class holder extends RecyclerView.ViewHolder{
         TextView day;
         TextView time;
+        TextView reminderTime;
         public holder(@NonNull View itemView) {
             super(itemView);
             day = itemView.findViewById(R.id.t_AvailDay);
             time = itemView.findViewById(R.id.t_availTime);
+            reminderTime = itemView.findViewById(R.id.t_reminderTime);
 
         }
     }

@@ -3,15 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
-
-    <item
-        android:id="@+id/mitemAdmin_globalDocs"
-        android:title="Global Documents"
-        app:showAsAction="never"
-        />
     <item
         android:id="@+id/mitemAdmin_SearchPatients"
         android:title="Search Patients"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/mitemAdmin_SearchDoctors"
+        android:title="Search Doctors"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/mitemAdmin_globalDocs"
+        android:title="Global Documents"
         app:showAsAction="never"
         />
     <item
@@ -20,11 +24,10 @@
         app:showAsAction="never"
         />
     <item
-        android:id="@+id/mitemAdmin_Appointment"
-        android:title="Appointment"
+        android:id="@+id/mitemAdmin_LogOut"
+        android:title="Log Out"
         app:showAsAction="never"
         />
-
     <item
         android:id="@+id/mitemAdmin_homeIcon"
         android:title="home"

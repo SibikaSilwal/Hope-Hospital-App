@@ -5,51 +5,239 @@
     android:id="@+id/t_welcomeMsg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E6E6FA"
     tools:context=".HomePage">
 
-   <include
-        layout="@layout/main_toolbar" />
-
-    <!--<TextView
-        android:id="@+id/t_userFullName"
-        android:layout_width="183dp"
-        android:layout_height="36dp"
-        android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/t_userEmail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.929"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.877" />
-
-    <TextView
-        android:id="@+id/t_userEmail"
-        android:layout_width="179dp"
-        android:layout_height="33dp"
-        android:layout_marginBottom="200dp"
-        android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/b_logout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.931"
-        app:layout_constraintStart_toStartOf="parent" /> -->
+ <include
+     android:id="@+id/mtoolbar"
+     layout="@layout/main_toolbar"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toTopOf="parent" />
 
 
-    <Button
-        android:id="@+id/b_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="Logout"
-        android:text="@string/logoutButton"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        app:backgroundTint="@color/button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+ <TextView
+     android:id="@+id/t_message"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:elevation="4dp"
+     android:padding="10dp"
+     android:background="@drawable/bottom_right_curved_background"
+     android:backgroundTint="#8B008B"
+     android:fontFamily="@font/hind_regular"
+     android:text="Hello,\nUsername !"
+     android:textAlignment="viewStart"
+     android:textColor="@color/white"
+     android:textSize="20sp"
+     android:textStyle="bold"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/mtoolbar" />
 
-    <TextView
+ <androidx.constraintlayout.widget.ConstraintLayout
+     android:id="@+id/HomeGridLayoutParent"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_margin="15dp"
+     android:padding="15dp"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintHorizontal_bias="0.0"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/t_message">
+
+  <LinearLayout
+      android:id="@+id/linearLayoutYourTestResult"
+      android:layout_width="140dp"
+      android:layout_height="120dp"
+      android:layout_marginStart="10dp"
+      android:layout_marginTop="5dp"
+      android:layout_marginRight="10dp"
+      android:layout_marginBottom="5dp"
+      android:background="@drawable/customized_button"
+      android:backgroundTint="#56208B"
+      android:orientation="vertical"
+      android:padding="10dp"
+      android:onClick="TestResult"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+   <ImageView
+       android:layout_width="80dp"
+       android:layout_height="80dp"
+       android:layout_gravity="center_horizontal"
+       android:src="@drawable/testresult"/>
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center_horizontal"
+       android:text="Test Results"
+       android:textColor="@color/white"
+       android:textStyle="bold" />
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/LinearLayoutYourAppt"
+      android:layout_width="140dp"
+      android:layout_height="120dp"
+      android:layout_marginEnd="5dp"
+      android:layout_marginTop="5dp"
+      android:orientation="vertical"
+      android:padding="10dp"
+      android:background="@drawable/customized_button"
+      android:backgroundTint="#FF824D"
+      android:onClick="UserAppts"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+   <ImageView
+       android:layout_width="80dp"
+       android:layout_height="80dp"
+       android:layout_gravity="center_horizontal"
+       android:src="@drawable/appointment"/>
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center_horizontal"
+       android:text="Appointments"
+       android:textColor="@color/white"
+       android:textStyle="bold" />
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/linearLayoutYourJournal"
+      android:layout_width="140dp"
+      android:layout_height="120dp"
+      android:layout_marginTop="5dp"
+      android:layout_marginEnd="5dp"
+      android:background="@drawable/customized_button"
+      android:backgroundTint="#E6047D"
+      android:orientation="vertical"
+      android:padding="10dp"
+      android:onClick="Journal"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/LinearLayoutYourAppt">
+
+   <ImageView
+       android:layout_width="80dp"
+       android:layout_height="80dp"
+       android:layout_gravity="center_horizontal"
+       android:src="@drawable/journal"/>
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center_horizontal"
+       android:text="Personal Journal"
+       android:textColor="@color/white"
+       android:textStyle="bold" />
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/linearLayoutScheduleAppt"
+      android:layout_width="140dp"
+      android:layout_height="120dp"
+      android:layout_marginStart="10dp"
+      android:layout_marginTop="5dp"
+      android:background="@drawable/customized_button"
+      android:backgroundTint="#03A1FE"
+      android:orientation="vertical"
+      android:padding="10dp"
+      android:onClick="ScheduleAppt"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/linearLayoutYourTestResult">
+
+   <ImageView
+       android:layout_width="80dp"
+       android:layout_height="80dp"
+       android:layout_gravity="center_horizontal"
+       android:src="@drawable/scheduleappointment"/>
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center_horizontal"
+       android:text="Schedule Visit"
+       android:textColor="@color/white"
+       android:textStyle="bold" />
+
+   <!--<Button
+       android:id="@+id/b_scheduleApptUser"
+       android:layout_width="200dp"
+       android:layout_height="50dp"
+       android:text="Schedule Appointment"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />-->
+
+  </LinearLayout>
+
+
+ </androidx.constraintlayout.widget.ConstraintLayout>
+
+ <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_margin="15dp"
+     android:padding="5dp"
+     android:background="@drawable/customized_button"
+     android:backgroundTint="@color/white"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/HomeGridLayoutParent"
+     android:orientation="vertical">
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="25dp"
+      android:layout_marginLeft="10dp"
+      android:drawableLeft="@drawable/ic_baseline_access_time_24"
+      android:drawablePadding="5dp"
+      android:fontFamily="@font/hind_regular"
+      android:padding="0dp"
+      android:text="Today's List >>"
+      android:textAlignment="textStart"
+      android:textAllCaps="true"
+      android:textColor="@color/black"
+      android:textSize="16dp"
+      android:textStyle="bold"
+      android:typeface="normal" />
+
+  <TextView
+      android:id="@+id/t_todaysItem"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="5dp"
+      android:fontFamily="@font/hind_regular"
+      android:padding="5dp"
+      android:text="You do not have anything scheduled for today."
+      android:textColor="@color/mdtp_red"
+      android:textSize="18dp" />
+
+ </LinearLayout>
+
+ <Button
+     android:id="@+id/b_logout"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:onClick="Logout"
+     android:text="@string/logoutButton"
+     android:textColor="@color/white"
+     android:textSize="18sp"
+     app:backgroundTint="@color/button"
+     app:layout_constraintBottom_toBottomOf="parent"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toTopOf="parent"
+     app:layout_constraintVertical_bias="1.0" />
+
+ <!--<TextView
         android:id="@+id/t_verifyemail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -75,19 +263,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/t_verifyemail" />
+        app:layout_constraintTop_toBottomOf="@+id/t_verifyemail" />-->
 
-    <TextView
-        android:id="@+id/t_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="211dp"
-        android:gravity="center_horizontal"
-        android:text="TextView"
-        android:textColor="@color/headings"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/b_verifyEmail" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

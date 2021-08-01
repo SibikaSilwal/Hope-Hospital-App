@@ -3,6 +3,8 @@
     package="com.example.seniorproject_hospitalapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,8 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SeniorProjectHospitalApp"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".UserJournalActivity"></activity>
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true">
+        <activity android:name=".UserInsuranceUpload"></activity>
+        <activity android:name=".DoctorProfileUser" />
+        <activity android:name=".UserJournalActivity" />
         <activity android:name=".ViewUserDocuments" />
         <activity android:name=".ManageDocAppointment" />
         <activity android:name=".DoctorProfileAdmin" />
@@ -49,7 +54,11 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/button" />
+            android:resource="@color/button" /> <!-- registering the receiver -->
+        <receiver
+            android:name=".ReminderAlarm"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

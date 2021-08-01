@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -48,6 +49,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserProfileAdminView extends AdminMenuActivity implements AdapterView.OnItemSelectedListener {
+    private LinearLayout m_LinearLayoutScheduleAppt, m_LinearLayoutViewUserAppt;
     Toolbar m_mainToolBar;
     TextView m_FullName, m_Email, m_Phone, m_WardList, m_addDocumentHeader;
     EditText m_DocumentName, m_DocumentMessage;
@@ -74,31 +76,34 @@ public class UserProfileAdminView extends AdminMenuActivity implements AdapterVi
         SetupUI();
         setSupportActionBar(m_mainToolBar);
 
-        if(m_ImgURL==null || m_ImgURL.trim().length() == 0){
+        /*if(m_ImgURL==null || m_ImgURL.trim().length() == 0){
             m_Img.setImageResource(R.drawable.profileavatar);
         }else{
             Picasso.get().load(m_ImgURL).into(m_Img);
-        }
+        }*/
 
-        m_SheduleApptBtn.setOnClickListener(new View.OnClickListener() {
+
+        /*m_SheduleApptBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("schedulebtn: "+ m_PatientsWardList);
                 Intent intent = new Intent(v.getContext(), Appointment.class);
                 intent.putExtra("patientID", m_UserID);
+                intent.putExtra("name", m_FullName.getText().toString());
                 intent.putExtra("email", m_Email.getText().toString());
                 intent.putExtra("phone", m_Phone.getText().toString());
                 intent.putExtra("wards", m_PatientsWardList);
                 startActivity(intent);
             }
-        });
+        });*/
 
         m_WardNamelist = new ArrayList<String>();
         m_WardNamelist.add("Select a Ward.");
         m_wardNameArrAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, m_WardNamelist);
         m_wardNameSpinner.setAdapter(m_wardNameArrAdapter);
         //m_wardNameSpinner.setPrompt("Select a Ward.");
-        Fetchdata();
+        PopulateWardSpinner();
+        GetPatientWards();
 
         m_wardNameSpinner.setOnItemSelectedListener(this);
 
@@ -138,6 +143,11 @@ public class UserProfileAdminView extends AdminMenuActivity implements AdapterVi
     }
 
     private void UploadImagetoFirebase(Uri a_Fileuri) {
+        if(a_Fileuri==null){
+            System.out.println("Nothing was uploaded");
+            Toast.makeText(UserProfileAdminView.this, "You have not uploaded any file.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         String fileName = m_DocumentName.getText().toString().trim().replaceAll("\\s", "") +".pdf";
         String fileNameValue = m_DocumentName.getText().toString().trim();
         String message = m_DocumentMessage.getText().toString().trim();
@@ -198,7 +208,10 @@ public class UserProfileAdminView extends AdminMenuActivity implements AdapterVi
                             newfile.put("newTestResult", true);
                             docref.update(newfile);
                         }
+                        m_DocumentName.setText("");
+                        m_DocumentMessage.setText("");
                         System.out.println("Success");
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -212,7 +225,7 @@ public class UserProfileAdminView extends AdminMenuActivity implements AdapterVi
 
     }
 
-    private void Fetchdata(){
+    private void PopulateWardSpinner() {
         //populating the wardname spinner by adding the ward names to the m_wardnamelist arraylist
         fstore.collection("Wards")
                 .whereNotEqualTo("WardName", null)
@@ -226,10 +239,14 @@ public class UserProfileAdminView extends AdminMenuActivity implements AdapterVi
                             }
                             m_wardNameArrAdapter.notifyDataSetChanged();
                         } else {
-                            System.out.println("Error getting Ward Names: "+ task.getException());
+                            System.out.println("Error getting Ward Names: " + task.getException());
                         }
                     }
                 });
+    }
+
+    private void GetPatientWards(){
+        //might need to break these two functions here!!!
         //getting the wards of the user/patient
         DocumentReference docRef = fstore.collection("users").document(m_UserID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -247,6 +264,8 @@ public class UserProfileAdminView extends AdminMenuActivity implements AdapterVi
                     m_WardList.setText(m_PatientWard);
                     m_PatientWard = "Wards " + m_FullName.getText().toString() + " is in:";
                     System.out.println("Patientwardlist: "+ m_PatientsWardList);
+                }else{
+                    m_PatientsWardList.add("You are not added to any wards yet to make an appointment.");
                 }
                 System.out.println("out of if block");
             }
@@ -268,10 +287,31 @@ public class UserProfileAdminView extends AdminMenuActivity implements AdapterVi
                     break;
         }
     }
+
+    private void SetInfo(TextView a_View, String a_data){
+        if(a_data!=null){
+            a_View.setText(a_data.toString());
+            System.out.println("here??");
+        }
+    }
+    public void SchedulePatientAppt(View a_view){
+        Intent intent = new Intent(a_view.getContext(), Appointment.class);
+        intent.putExtra("patientID", m_UserID);
+        intent.putExtra("name", m_FullName.getText().toString());
+        intent.putExtra("email", m_Email.getText().toString());
+        intent.putExtra("phone", m_Phone.getText().toString());
+        intent.putExtra("wards", m_PatientsWardList);
+        startActivity(intent);
+    }
+    public void ViewPatientAppointments(View a_view){
+        Intent intent = new Intent(a_view.getContext(), SettingsPage.class);
+        intent.putExtra("patientID", m_UserID);
+        startActivity(intent);
+    }
     private void SetupUI(){
         m_mainToolBar= findViewById(R.id.mtoolbar);
-        m_mainToolBar.setTitle("Hope Hospital App");
-        m_SheduleApptBtn= findViewById(R.id.b_ScheduleApptforUser);
+        m_mainToolBar.setTitle("");
+        //m_SheduleApptBtn= findViewById(R.id.b_ScheduleApptforUser);
         m_FullName= findViewById(R.id.t_UserFullName1);
         m_Email = findViewById(R.id.t_userEmail2);
         m_Phone= findViewById(R.id.t_userPhone1);
@@ -284,12 +324,16 @@ public class UserProfileAdminView extends AdminMenuActivity implements AdapterVi
         m_pdfThumb = findViewById(R.id.i_pdfthumb2);
         m_RadioNo = findViewById(R.id.radio_no);
         m_RadioYes = findViewById(R.id.radio_yes);
-        m_FullName.setText(getIntent().getStringExtra("uName").toString());
-        m_Email.setText(getIntent().getStringExtra("uEmail").toString());
-        m_Phone.setText(getIntent().getStringExtra("uPhone").toString());
+        m_LinearLayoutScheduleAppt = findViewById(R.id.linearLayoutScheduleAppt);
+        m_LinearLayoutViewUserAppt = findViewById(R.id.linearLayoutViewUserAppts);
+        SetInfo(m_FullName, getIntent().getStringExtra("uName"));
+        SetInfo(m_Email, getIntent().getStringExtra("uEmail"));
+        SetInfo(m_Phone, getIntent().getStringExtra("uPhone"));
         m_UserID= getIntent().getStringExtra("userId").toString();
         m_ImgURL = getIntent().getStringExtra("imgURL");
-
+        if(m_ImgURL!=null && m_ImgURL.trim().length() != 0){
+            Picasso.get().load(m_ImgURL).into(m_Img);
+        }
         fstore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         docref = fstore.collection("users").document(m_UserID);
@@ -306,8 +350,13 @@ public class UserProfileAdminView extends AdminMenuActivity implements AdapterVi
             //do nothing
         }else{
             DocumentReference docRef = fstore.collection("users").document(m_UserID);
-            docRef.update("WardName", FieldValue.arrayUnion(parent.getItemAtPosition(position)));
-
+            docRef.update("WardName", FieldValue.arrayUnion(parent.getItemAtPosition(position)))
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    GetPatientWards();
+                }
+            });
         }
 
     }

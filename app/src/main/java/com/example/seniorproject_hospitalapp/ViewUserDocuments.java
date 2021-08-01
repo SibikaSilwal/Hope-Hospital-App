@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,6 +25,7 @@ import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 public class ViewUserDocuments extends GlobalMenuActivity {
@@ -46,26 +48,28 @@ public class ViewUserDocuments extends GlobalMenuActivity {
         setSupportActionBar(m_mainToolBar);
 
         m_recView.setLayoutManager(new LinearLayoutManager(this));
+        System.out.println("Being called twice??");
         GetTestDocuments();
 
     }
 
     private void GetTestDocuments(){
-        m_docReference.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<DocumentSnapshot>() {
+        System.out.println("Funtion called");
+        m_docReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@com.google.firebase.database.annotations.Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                Integer FileCount = Integer.parseInt(snapshot.getData().get("FileCounter").toString()) ;
-                for(int i = 1; i<=FileCount; i++){
-                    m_testDocumentsArr.add((i-1),(Map<String,Object>) snapshot.getData().get(Integer.toString(i)));
-                    //System.out.println("map: "+snapshot.getData().get(Integer.toString(i)));
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    if(documentSnapshot.getData().get("FileCounter")!=null){
+                        Integer FileCount = Integer.parseInt(documentSnapshot.getData().get("FileCounter").toString()) ;
+                        for(int i = 1; i<=FileCount; i++){
+                            m_testDocumentsArr.add((i-1),(Map<String,Object>) documentSnapshot.getData().get(Integer.toString(i)));
+                        }
+                        Collections.reverse(m_testDocumentsArr);
+                        m_adapter = new UserDocumentAdapter(m_testDocumentsArr);
+                        m_recView.setAdapter(m_adapter);
+                        m_adapter.notifyDataSetChanged();
+                    }
                 }
-                //m_testDocumentsArr = (ArrayList<Map<String, Object>>) snapshot.getData().get("AppointmentsInfo");
-                //System.out.println("appt info2: "+m_appInfo);
-                m_adapter = new UserDocumentAdapter(m_testDocumentsArr);
-                m_recView.setAdapter(m_adapter);
-                m_adapter.notifyDataSetChanged();
-                //System.out.println("document array: " + m_testDocumentsArr);
             }
         });
     }
@@ -75,8 +79,8 @@ public class ViewUserDocuments extends GlobalMenuActivity {
         m_recView = findViewById(R.id.rclviewUsersDoc);
         m_fAuth = FirebaseAuth.getInstance();
         m_userID= m_fAuth.getUid();
-        storage = FirebaseStorage.getInstance();
-        listRef = storage.getReference().child("users/"+m_userID);
+        //storage = FirebaseStorage.getInstance();
+        //listRef = storage.getReference().child("users/"+m_userID);
         m_fstore = FirebaseFirestore.getInstance();
         m_docReference = m_fstore.collection("Message").document(m_userID);
 

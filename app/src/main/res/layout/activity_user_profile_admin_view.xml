@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E6E6FA"
     tools:context=".UserProfileAdminView">
 
     <include
@@ -14,6 +15,9 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="110dp"
+        android:background="@drawable/bottom_right_curved_background"
+        android:backgroundTint="#8B008B"
+        android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,13 +28,9 @@
             android:layout_width="90dp"
             android:layout_height="88dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="320dp"
-
-            android:layout_marginRight="320dp"
-            android:src="@drawable/profileavatar"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/patient_avatar"
             app:civ_border_color="#FF000000"
             app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,15 +42,11 @@
             android:id="@+id/t_UserFullName1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginRight="100dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:text="Full Name"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/placeholderIMG"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -58,15 +54,11 @@
             android:id="@+id/t_userPhone1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginRight="100dp"
-            android:text="Phone #"
-            android:textColor="@color/black"
+            android:text="Patient's Phone"
+            android:textColor="@color/white"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/placeholderIMG"
             app:layout_constraintTop_toBottomOf="@+id/t_UserFullName1" />
 
@@ -74,168 +66,307 @@
             android:id="@+id/t_userEmail2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginRight="100dp"
-            android:text="Email"
-            android:textColor="@color/black"
+            android:text="Patient's Email"
+            android:textColor="@color/white"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/placeholderIMG"
             app:layout_constraintTop_toBottomOf="@+id/t_userPhone1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Spinner
-        android:id="@+id/wardSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.044"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="Add user to a group"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-    <TextView
-        android:id="@+id/t_PatientWardList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:maxLines="10"
-        android:text="TextView"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toEndOf="@+id/divider2"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="1dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="20dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintStart_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-    <Button
-        android:id="@+id/b_ScheduleApptforUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Schedule Appointment for Patient"
-        app:backgroundTint="@color/button2"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="170dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider2" >
+        app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="2dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/t_addDocumentHeading"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Add new document for patient"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/pdficon"
-                android:id="@+id/i_pdfthumb2"
-                android:layout_below="@+id/t_addDocumentHeading"/>
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Enter Document Name"
-                android:inputType="textPersonName"
-                android:text=""
-                android:id="@+id/e_UploadDocName"
-                android:layout_below="@+id/t_addDocumentHeading"
-                android:layout_toRightOf="@+id/i_pdfthumb2"
-                 />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Is this a test result?"
-                android:layout_below="@+id/t_addDocumentHeading"
-                android:layout_toRightOf="@+id/e_UploadDocName"
-                android:id="@+id/t_radiobtnquestion"/>
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="12dp"
                 android:orientation="horizontal"
-                android:layout_below="@+id/t_radiobtnquestion"
-                android:layout_toRightOf="@+id/e_UploadDocName"
-                >
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout15">
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:text="Yes"
-                    android:id="@+id/radio_yes"
-                    android:onClick="onRadioButtonClicked"
-                    />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:text="No"
-                    android:id="@+id/radio_no"
-                    android:onClick="onRadioButtonClicked"
-                    />
-            </RadioGroup>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
 
-            <EditText
-                android:id="@+id/e_DocumentMsg"
-                android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/linearLayoutScheduleAppt"
+                    android:layout_width="150dp"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/customized_button"
+                    android:backgroundTint="#03A1FE"
+                    android:onClick="SchedulePatientAppt"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/scheduleappointment" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Schedule Appointment"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutViewUserAppts"
+                    android:layout_width="150dp"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/customized_button"
+                    android:backgroundTint="#FF824D"
+                    android:onClick="ViewPatientAppointments"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/appointment" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="View Patient Appointments"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout15"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
-                android:hint="Message"
-                android:layout_below="@+id/i_pdfthumb2"/>
+                android:layout_margin="8dp"
+                android:background="@drawable/customized_button"
+                android:backgroundTint="@color/white"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/UserWardLinearView">
+
+                <TextView
+                    android:id="@+id/t_addDocumentHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_bottom"
+                    android:fontFamily="@font/hind_regular"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="Upload new document for patient"
+                    android:textColor="#8B008B"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/e_UploadDocName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/custom_input_2"
+                    android:fontFamily="@font/hind_regular"
+                    android:hint="Enter Document Name"
+                    android:inputType="textPersonName"
+                    android:padding="8dp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textColorHint="#7B68EE	" />
+
+
+                <EditText
+                    android:id="@+id/e_DocumentMsg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/i_pdfthumb2"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/custom_input_2"
+                    android:fontFamily="@font/hind_regular"
+                    android:gravity="top|left"
+                    android:hint="Enter Message"
+                    android:inputType="textMultiLine"
+                    android:minLines="2"
+                    android:padding="8dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#7B68EE" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:orientation="horizontal"
+                    android:padding="3dp">
+
+                    <ImageView
+                        android:id="@+id/i_pdfthumb2"
+                        android:layout_width="65dp"
+                        android:layout_height="55dp"
+                        android:layout_below="@+id/t_addDocumentHeading"
+                        android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_baseline_cloud_upload_24" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/t_radiobtnquestion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/t_addDocumentHeading"
+                            android:layout_toRightOf="@+id/e_UploadDocName"
+                            android:fontFamily="@font/hind_regular"
+                            android:text="Is this a test result?"
+                            android:textColor="#7B68EE"
+                            android:textStyle="bold" />
+
+                        <RadioGroup
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/t_radiobtnquestion"
+                            android:layout_toRightOf="@+id/e_UploadDocName"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/radio_yes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:fontFamily="@font/hind_regular"
+                                android:onClick="onRadioButtonClicked"
+                                android:paddingRight="10dp"
+                                android:text="Yes"
+                                android:textColor="#7B68EE"
+                                android:textStyle="bold" />
+
+                            <RadioButton
+                                android:id="@+id/radio_no"
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:fontFamily="@font/hind_regular"
+                                android:onClick="onRadioButtonClicked"
+                                android:paddingRight="10dp"
+                                android:text="No"
+                                android:textColor="#7B68EE"
+                                android:textStyle="bold" />
+                        </RadioGroup>
+                    </LinearLayout>
+                </LinearLayout>
 
             <Button
                 android:id="@+id/b_uploadPatientDoc"
                 android:layout_width="wrap_content"
                 android:layout_height="45dp"
-                android:layout_below="@+id/i_pdfthumb2"
-                android:layout_toRightOf="@+id/e_DocumentMsg"
-                android:backgroundTint="@color/button2"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/customized_button"
                 android:text="Upload"
-                android:layout_marginLeft="10dp"/>
+                app:backgroundTint="#8B008B" />
 
-        </RelativeLayout>
+        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/UserWardLinearView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/border_around"
+                android:backgroundTint="@color/button2"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
 
-    </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_baseline_add_box_24"
+                        android:fontFamily="@font/hind_regular"
+                        android:text="Add patient to a ward."
+                        android:textColor="#8B008B"
+                        android:textSize="16sp" />
+
+                    <Spinner
+                        android:id="@+id/wardSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="1dp"
+                    android:layout_height="100dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:id="@+id/t_PatientWardList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/hind_regular"
+                    android:maxLines="10"
+                    android:text="Patient's Wards."
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

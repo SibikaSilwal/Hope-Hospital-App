@@ -4,31 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Appointment">
+    tools:context=".Appointment"
+    android:background="#E6E6FA">
 
     <include
-    android:id="@+id/mtoolbar"
-    layout="@layout/main_toolbar" />
+        android:id="@+id/mtoolbar"
+        layout="@layout/main_toolbar" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Select a Doctor."
+        android:textColor="@color/heading2"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mtoolbar" />
 
     <Spinner
         android:id="@+id/spinnerdocName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:paddingStart="10dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/customized_input_box"
+        android:elevation="8dp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mtoolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="18dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Full Name"
+        android:text="Patient's Name"
         android:textColor="@color/heading2"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -39,11 +60,15 @@
     <TextView
         android:id="@+id/t_patientName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Patient's Name"
+        android:paddingStart="10dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/customized_input_box"
+        android:elevation="8dp"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +78,7 @@
         android:id="@+id/textView15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="18dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Email address"
@@ -67,11 +92,15 @@
     <TextView
         android:id="@+id/t_patientEmail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Patient's Email"
+        android:paddingStart="10dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/customized_input_box"
+        android:elevation="8dp"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +110,7 @@
         android:id="@+id/textView17"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="18dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Phone"
@@ -95,21 +124,57 @@
     <TextView
         android:id="@+id/t_patientPhone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Patient's Phone"
+        android:paddingStart="10dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/customized_input_box"
+        android:elevation="8dp"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
     <TextView
+        android:id="@+id/t_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Select Date"
+        android:textColor="@color/heading2"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/t_patientPhone" />
+
+    <TextView
+        android:id="@+id/t_apptDate"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Choose Date"
+        android:paddingStart="10dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/customized_input_box"
+        android:elevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/t_date"
+        android:onClick="OpenDatePicker"/>
+
+    <TextView
         android:id="@+id/textView19"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="18dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Available Dates"
@@ -117,8 +182,9 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/t_patientPhone" />
+        app:layout_constraintTop_toBottomOf="@+id/t_apptDate" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recViewAvailability"

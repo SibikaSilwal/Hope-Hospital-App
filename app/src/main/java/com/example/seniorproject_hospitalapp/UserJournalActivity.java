@@ -37,7 +37,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-public class UserJournalActivity extends AppCompatActivity {
+public class UserJournalActivity extends GlobalMenuActivity {
     private Toolbar m_mainToolBar;
     private EditText m_userNotes;
     private Button m_saveBtn;
@@ -97,7 +97,7 @@ public class UserJournalActivity extends AppCompatActivity {
 
     private void SetupUI() {
         m_mainToolBar = findViewById(R.id.mtoolbar);
-        m_mainToolBar.setTitle("Hope Hospital App");
+        //m_mainToolBar.setTitle("Hope Hospital App");
         m_userNotes = findViewById(R.id.e_userJournalNotes);
         m_saveBtn = findViewById(R.id.b_saveNotes);
         m_fAuth = FirebaseAuth.getInstance();

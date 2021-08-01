@@ -3,22 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="5dp"
-    android:elevation="5dp"
-    app:cardUseCompatPadding="true">
+    app:cardCornerRadius="15dp"
+    android:elevation="10dp"
+    app:cardUseCompatPadding="true"
+    android:backgroundTint="#F8F8FF">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp">
+        android:padding="8dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_marginLeft="4dp"
             android:id="@+id/DoctorImage"
-            android:src="@drawable/profileavatar"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#FF000000"/>
+            android:src="@drawable/doctor_avatar"
+            app:civ_border_width="1dp"
+            app:civ_border_color="#FF000000"
+            android:layout_centerVertical="true"/>
 
         <TextView
             android:id="@+id/t_apptDoctorName"
@@ -26,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Doctor's Name"
             android:layout_toRightOf="@+id/DoctorImage"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             />
         <TextView
             android:id="@+id/t_apptDoctorEmail"
@@ -35,7 +38,7 @@
             android:text="Doctor's Email"
             android:layout_toRightOf="@+id/DoctorImage"
             android:layout_below="@+id/t_apptDoctorName"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             />
         <TextView
             android:id="@+id/t_apptDoctorPhone"
@@ -44,7 +47,7 @@
             android:text="Patient's Phone"
             android:layout_toRightOf="@+id/DoctorImage"
             android:layout_below="@+id/t_apptDoctorEmail"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             />
         <TextView
             android:id="@+id/t_apptTimePatient"
@@ -53,19 +56,36 @@
             android:text="Appointment Time"
             android:layout_toRightOf="@+id/DoctorImage"
             android:layout_below="@+id/t_apptDoctorPhone"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             />
 
         <Button
             android:id="@+id/b_cancelApptPatient"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/DoctorImage"
-            android:layout_marginLeft="0dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@+id/DoctorImage"
+            android:layout_below="@id/t_apptTimePatient"
+            android:background="@drawable/customized_button"
+            android:padding="3dp"
             android:backgroundTint="@color/button2"
+            android:elevation="10dp"
             android:text="Cancel Appointment"
-            android:layout_centerHorizontal="true"
             android:textSize="12sp"
+            app:backgroundTint="@color/button2" />
+        <TextView
+            android:id="@+id/t_pastAppointment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Past Appointment"
+            android:layout_centerHorizontal="true"
+            android:textSize="14sp"
+            android:textColor="@color/button"
+            android:textStyle="bold"
+            android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@+id/DoctorImage"
+            android:layout_below="@id/t_apptTimePatient"
+            android:visibility="gone"
             />
 
 

@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class AdminMenuActivity extends AppCompatActivity {
     //menu
     @Override
@@ -26,7 +28,6 @@ public class AdminMenuActivity extends AppCompatActivity {
                     0, spannable.length(), 0);
             mItem.setTitle(spannable);
         }
-
         return true;
     }
 
@@ -45,8 +46,10 @@ public class AdminMenuActivity extends AppCompatActivity {
             case R.id.mitemAdmin_ManageGroup:
                 startActivity(new Intent(getApplicationContext(), ManageGroupAdmin.class));
                 return true;
-            case R.id.mitemAdmin_Appointment:
-                startActivity(new Intent(getApplicationContext(), Appointment.class));
+            case R.id.mitemAdmin_LogOut:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                startActivity(new Intent(getApplicationContext(), LoginPage.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

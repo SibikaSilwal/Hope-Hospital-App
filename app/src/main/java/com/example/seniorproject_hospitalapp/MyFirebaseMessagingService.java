@@ -1,5 +1,6 @@
 package com.example.seniorproject_hospitalapp;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -10,6 +11,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
+//import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,6 +25,10 @@ import android.os.Handler;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
 
@@ -33,77 +39,46 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         System.out.println("Refreshed token:"+token);
     }
 
-    /*If the notification message is received while the app is running on the foreground, it is shown as a toast message.*/
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        System.out.println("working fine here?");
-        /*Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            public void run() {
-                System.out.println("working fine here2?");
-                Notification notification = new NotificationCompat.Builder(getApplicationContext(), "123")
-                        .setContentTitle(remoteMessage.getData().get("title"))
-                        .setContentText(remoteMessage.getData().get("body"))
-                        .setSmallIcon(R.drawable.ic_home)
-                        .build();
-                NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
-                manager.notify(123, notification);
-                System.out.println("message: "+remoteMessage.getData().get("title"));
-            }
-        });*/
-        sendNotification(remoteMessage.getData().get("title"),remoteMessage.getData().get("body") );
-
-
-        /*
-        Handler handler = new Handler(Looper.getMainLooper());
-        Log.e(TAG, "From: " + remoteMessage.getFrom());
-
-        if (remoteMessage == null)
-            return;
-
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            remoteMessage.getNotification();
-            handler.post(new Runnable() {
-                public void run() {
-                    Toast.makeText(getApplicationContext(),remoteMessage.getNotification().getTitle()+"\n"+remoteMessage.getNotification().getBody(),Toast.LENGTH_LONG).show();
-                }
-            });
+        if(remoteMessage.getData().get("title").equals("New Appointment Set.")){
+            System.out.println("Caalled notification???");
+            long reminder = Long.parseLong(remoteMessage.getData().get("body"));
+            // Creating date format
+            DateFormat simple = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+            // Creating date from milliseconds
+            // using Date() constructor
+            //Date alarmtime = new Date(reminder);
+            Date result = new Date(reminder + 3600000);
+            System.out.println("alarm will go off at: "+ simple.format(reminder));
+            // Formatting Date and passing in the function
+            setAlarm(Long.parseLong(remoteMessage.getData().get("body")) ,simple.format(result)); //add try catch here
+        }else{
+            SendNotification(this, remoteMessage.getData().get("title"),remoteMessage.getData().get("body") );
         }
 
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
-            Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
-
-            try {
-                JSONObject json = new JSONObject(remoteMessage.getData().toString());
-                //handleDataMessage(json);
-            } catch (Exception e) {
-                Log.e(TAG, "Exception: " + e.getMessage());
-            }
-        }*/
     }
 
-    private void sendNotification( String a_msgTitle, String a_msgBody) {
-        Intent intent = new Intent(this, HomePage.class);
+    public void SendNotification(Context a_context, String a_msgTitle, String a_msgBody) {
+        Intent intent = new Intent(a_context, HomePage.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(a_context, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = "fcm_default_channel";
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_home)
+                new NotificationCompat.Builder(a_context, channelId)
+                        .setSmallIcon(R.drawable.toolbar_logo2)
                         .setContentTitle(a_msgTitle)
                         .setContentText(a_msgBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(a_context);
 
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -114,6 +89,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
+    private void setAlarm(long a_time, String a_AppointmentTime) {
+        //getting the alarm manager
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        //creating a new intent specifying the broadcast receiver
+        Intent i = new Intent(this, ReminderAlarm.class);
+        i.putExtra("ScheduleType", "Setting Reminder.");
+        i.putExtra("NotificationTitle", "Reminder: You have an appointment today!");
+        i.putExtra("NotificationContent", "Your appointment for, " + a_AppointmentTime + "\nis in an hour.");
+        //creating a pending intent using the intent
+        int uniqueRequestCode = (int)System.currentTimeMillis();
+        PendingIntent pi = PendingIntent.getBroadcast(this, uniqueRequestCode, i, 0);
+
+
+        /*Need to make sure that the request code in pi is different to allow multiple alarms to be scheduled...*/
+        //setting the repeating alarm that will be fired every day
+        am.setExact(AlarmManager.RTC_WAKEUP, a_time, pi);
+        //am.setRepeating(AlarmManager.RTC_WAKEUP, a_time, AlarmManager.INTERVAL_DAY, pi);
+
     }
 
 }

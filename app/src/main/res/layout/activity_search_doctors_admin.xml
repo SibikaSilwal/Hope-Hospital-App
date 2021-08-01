@@ -13,54 +13,110 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewDoc"
         android:layout_width="match_parent"
-        android:layout_height="490dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mtoolbar" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Add New Doctor"
-        app:layout_constraintBottom_toTopOf="@+id/e_DocID"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/e_DocID"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="Enter Doctor's ID"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/e_DocName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/e_DocName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter Doctor's Name"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/b_AddDoctor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/b_AddDoctor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/button"
-        android:backgroundTint="@color/button"
-        android:text="Add Doctor"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="138dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mtoolbar">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/t_addNewDoc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="18dp"
+        android:text="Add New Doctor"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:background="@drawable/border_around"
+        android:backgroundTint="#4CD97B"
+        android:drawableLeft="@drawable/ic_baseline_arrow_drop_down_24"
+        android:onClick="AddNewDoctor"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/addNewDocLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewDoc" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/addNewDocLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/customized_button"
+        android:backgroundTint="#D8BFD8"
+        android:padding="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewDoc"
+        app:layout_constraintVertical_bias="1.0"
+        tools:visibility="gone">
+
+
+        <EditText
+            android:id="@+id/e_DocID"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/customized_input_box"
+            android:elevation="2dp"
+            android:hint="Enter Doctor's ID"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/addNewDocLayout" />
+
+        <EditText
+            android:id="@+id/e_DocName"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/customized_input_box"
+            android:elevation="2dp"
+            android:hint="Enter Doctor's Name"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/e_DocID" />
+
+        <Button
+            android:id="@+id/b_AddDoctor"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginStart="146dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="146dp"
+            android:background="@drawable/customized_button"
+            android:backgroundTint="#9C27B0"
+            android:text="Add Doctor"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:backgroundTint="#9C27B0"
+            app:iconPadding="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/e_DocName" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

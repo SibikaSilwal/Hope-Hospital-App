@@ -20,11 +20,13 @@ public class UserDocumentAdapter extends RecyclerView.Adapter<UserDocumentAdapte
     ArrayList<Map<String, Object>> data = new ArrayList<>();
     public UserDocumentAdapter(ArrayList<Map<String, Object>> data) {
         this.data = data;
+        System.out.println("documents sent: "+data);
     }
 
     @NonNull
     @Override
     public holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        System.out.println("create view??");
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.document_user_single_row, parent, false);
         return new UserDocumentAdapter.holder(view);

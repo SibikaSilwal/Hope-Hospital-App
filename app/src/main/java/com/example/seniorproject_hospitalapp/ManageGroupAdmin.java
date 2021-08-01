@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 //import android.support.v7.widget.Toolbar;
 import androidx.appcompat.widget.Toolbar;
@@ -39,8 +40,9 @@ public class ManageGroupAdmin extends AdminMenuActivity {
     private RecyclerView m_recView;
     private WardGroupAdapter m_adapter;
     private EditText m_NewWardName;
-    private Button m_uploadWardIcon, m_CreateWard;
+    private ImageView m_uploadWardIcon, m_CreateWard;
     private String m_iconName;
+    private Uri m_WardIconUri;
     private FirebaseFirestore fstore;
     private FirebaseStorage fstorage;
     private StorageReference storageReference;
@@ -85,9 +87,10 @@ public class ManageGroupAdmin extends AdminMenuActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==2000){
             if(resultCode == Activity.RESULT_OK){ //do we have any result on the data? so check
-                Uri imageUri = data.getData();
+                //Uri imageUri = data.getData();
                 //m_profileImage.setImageURI(imageUri);
-                UploadImagetoFirebase(imageUri);
+                m_WardIconUri = data.getData();
+                //UploadImagetoFirebase(imageUri);
             }
         }
     }
@@ -119,9 +122,18 @@ public class ManageGroupAdmin extends AdminMenuActivity {
         });
     }
 
+    public void AddNewWard(View a_view){
+        if(m_WardIconUri==null){
+            Toast.makeText(ManageGroupAdmin.this, "Please choose a ward icon.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        UploadImagetoFirebase(m_WardIconUri);
+        m_NewWardName.setText("");
+        Toast.makeText(ManageGroupAdmin.this, "New ward was created successfully.", Toast.LENGTH_SHORT).show();
+    }
     private void SetupUI(){
         m_mainToolBar= findViewById(R.id.mtoolbar);
-        m_mainToolBar.setTitle("Hope Hospital App");
+        m_mainToolBar.setTitle("");
         m_recView = findViewById(R.id.recViewward);
         m_NewWardName= findViewById(R.id.e_newwardname);
         m_uploadWardIcon = findViewById(R.id.b_chooseWardIcon);

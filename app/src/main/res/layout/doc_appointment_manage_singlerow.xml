@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="5dp"
-    android:elevation="5dp"
-    app:cardUseCompatPadding="true">
+    app:cardCornerRadius="15dp"
+    android:elevation="10dp"
+    app:cardUseCompatPadding="true"
+    android:backgroundTint="#F8F8FF">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp">
+        android:padding="5dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="80dp"
@@ -55,27 +56,34 @@
             android:layout_below="@+id/t_apptPatientPhone"
             android:layout_marginLeft="20dp"
             />
-
-        <Button
-            android:id="@+id/b_cancelAppt"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/patientImage"
-            android:layout_marginLeft="0dp"
-            android:backgroundTint="@color/button2"
-            android:text="Cancel Appointment"
-            android:textSize="12sp"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mark Done"
-            android:id="@+id/b_apptCompleted"
-            android:layout_toRightOf="@+id/b_cancelAppt"
-            android:layout_below="@+id/patientImage"
-            android:layout_marginLeft="5dp"
-            android:backgroundTint="@color/button2"
-            />
+            android:layout_centerHorizontal="true">
+            <Button
+                android:id="@+id/b_cancelAppt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_around"
+                app:backgroundTint="@color/button2"
+                android:text="Cancel Appointment"
+                android:textSize="12sp"
+                android:textColor="#6A6C70"
+                android:elevation="2dp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mark Done"
+                android:id="@+id/b_apptCompleted"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/border_around"
+                android:textColor="#6A6C70"
+                app:backgroundTint="@color/button2"
+                android:elevation="2dp"
+                />
+        </LinearLayout>
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

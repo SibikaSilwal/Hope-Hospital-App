@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="5dp"
-    android:elevation="5dp"
-    app:cardUseCompatPadding="true">
+    app:cardCornerRadius="15dp"
+    android:elevation="10dp"
+    app:cardUseCompatPadding="true"
+    android:backgroundTint="#F8F8FF">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp">
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/i_pdfthumb1"
@@ -22,43 +23,44 @@
             android:id="@+id/t_GlobalDocName1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="100dp"
-            android:layout_marginRight="0dp"
-            android:gravity="center_horizontal"
+            android:layout_toRightOf="@+id/i_pdfthumb1"
+            android:layout_marginLeft="20dp"
+            android:fontFamily="@font/hind_regular"
             android:text="Privacy Policy Document"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/b_GDocChange"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
             android:layout_below="@+id/t_GlobalDocName1"
-            android:layout_marginStart="50dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toEndOf="@+id/i_pdfthumb1"
-            android:layout_toRightOf="@+id/i_pdfthumb1"
-            android:text="Change"
-            android:textSize="12sp"
-            app:backgroundTint="@color/button2" />
+            android:layout_toRightOf="@+id/i_pdfthumb1">
 
-        <Button
-            android:id="@+id/b_GDocDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/t_GlobalDocName1"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:text="Delete"
-            android:textSize="12sp"
-            app:backgroundTint="@color/button2" />
+            <Button
+                android:id="@+id/b_GDocChange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change"
+                android:background="@drawable/border_around"
+                app:backgroundTint="@color/button2"
+                android:textSize="12sp"
+                android:textColor="#6A6C70"
+                android:elevation="2dp" />
 
+            <Button
+                android:id="@+id/b_GDocDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Delete"
+                android:background="@drawable/border_around"
+                app:backgroundTint="@color/button2"
+                android:textSize="12sp"
+                android:textColor="#6A6C70"
+                android:elevation="2dp" />
+        </LinearLayout>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

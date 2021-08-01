@@ -24,28 +24,75 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+/**
+* This class represents the Registration Page which allows the new users to create an account in the application.
+*
+* This class makes use of Firebase Email and Password based Authentication to register and authenticate users.
+* Therefore, this class takes three main user inputs--User Email, User Full Name, and User Password,
+* through Android's EditText view.
+* If user is created successfully then, this class navigates user to the Home Page.
+*/
 
 public class RegistrationPage extends AppCompatActivity {
 
-    private EditText reg_Fullname, reg_Email, reg_Password, reg_Confirmpassword;
-    private Button reg_Button;
-    private TextView goto_Login;
-    String m_name , m_password, m_confirmPassword, m_email;
-    FirebaseAuth fAuth;
-    FirebaseFirestore fstore;
-    String userID;
+    private EditText m_RegisterFullName, m_RegisterEmail, m_RegisterPassword, m_RegisterConfirmPassword;
+    private Button m_RegisterButton;
+    private TextView m_GotoLogin;
+    private String m_name, m_password, m_confirmPassword, m_email, m_UserID;
+    private FirebaseAuth m_fAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore m_fStore = FirebaseFirestore.getInstance();
+
+    /**/
+    /*
+
+    NAME
+
+            onCreate - initializes RegistrationPage activity..
+
+    SYNOPSIS
+
+            protected void onCreate(Bundle a_savedInstanceState);
+                a_savedInstanceState     --> the activity's previously frozen state, if there was one
+
+    DESCRIPTION
+
+            This function initialized the RegistrationPage activity and links
+            it to its respective layout resource file i.e. activity_registration_page
+            which allows retrieving the Widgets and Views used in the layout to
+            perform actions and handle events as required, by setting the events
+            listeners.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:04pm 01/19/2021
+
+    */
+    /**/
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle a_savedInstanceState) {
+        super.onCreate(a_savedInstanceState);
+
+        //links the activity page to its respective layout resource file i.e. activity_registration_page
         setContentView(R.layout.activity_registration_page);
+
+        //initializes all UI components
         SetupUI();
 
-        //if the user is already registered, send them to next activity
-        if(fAuth.getCurrentUser()!=null){
+        //if the user is already registered, sends them to HomePage activity
+        if(m_fAuth.getCurrentUser()!=null){
             startActivity(new Intent(getApplicationContext(), HomePage.class));
         }
-        /*Direct user to login page if already have an account*/
-        goto_Login.setOnClickListener(new View.OnClickListener() {
+
+        //Provides an option for to login for users who already have an account and Directs user to login page
+        m_GotoLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(RegistrationPage.this, LoginPage.class));
@@ -53,89 +100,154 @@ public class RegistrationPage extends AppCompatActivity {
         });
 
         /*register users*/
-        reg_Button.setOnClickListener(new View.OnClickListener() {
+        m_RegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Validate()){
-                    //register user to firebase database.
-                    fAuth.createUserWithEmailAndPassword(m_email, m_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                //Validates user inputs
+                if(Validate())
+                {
+                    //Creates new user with email and password in firebase database
+                    m_fAuth.createUserWithEmailAndPassword(m_email, m_password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>()
+                    {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            //task means the task of registering the user
-                            if(task.isSuccessful()){
-                                userID = fAuth.getCurrentUser().getUid(); //gets the current user id of currently regitered user
-                                DocumentReference docReference = fstore.collection("users").document(userID);
+                        public void onComplete(@NonNull Task<AuthResult> task)
+                        {
+                            //stores user information in firestore collection named 'users'.
+                            if(task.isSuccessful())
+                            {
+                                //gets the current user id of currently regitered user
+                                m_UserID = m_fAuth.getCurrentUser().getUid();
+                                DocumentReference docReference = m_fStore.collection("users").document(m_UserID);
                                 Map<String, Object> user = new HashMap<>();
-                                user.put("uID", userID);
+                                user.put("uID", m_UserID);
                                 user.put("fName", m_name);
                                 user.put("email", m_email);
-                                user.put("isUser", "1");
                                 docReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Log.d("Tag", "onSuccess: user Profile is created for "+ userID);
-
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d("Tag", "onFailure: " + e.toString());
+                                        //Sends user to HomePage activity after successful registration.
+                                        startActivity(new Intent(getApplicationContext(), HomePage.class));
                                     }
                                 });
-                                startActivity(new Intent(getApplicationContext(), HomePage.class));
                             }else{
-                                Toast.makeText(RegistrationPage.this, "Error! "+ task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegistrationPage.this,
+                                        "Error! "+ task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 }
             }
         });
+
     }
 
-    private boolean Validate(){
-        //boolean result = false;
+    /**/
+    /*
 
-        m_name = reg_Fullname.getText().toString().trim();
-        m_password = reg_Password.getText().toString().trim();
-        m_confirmPassword = reg_Confirmpassword.getText().toString().trim();
-        m_email = reg_Email.getText().toString().trim();
+    NAME
+
+            Validate - validates user inputs.
+
+    SYNOPSIS
+
+            private boolean Validate();
+
+    DESCRIPTION
+
+            This function validates and checks for empty values fo all the user
+            inputs in the activity.
+
+    RETURNS
+
+            Returns False if the Email, Full Name, and Password  fields are empty.
+            Returns False if the Password field entry is less than 6 characters.
+            Returns False if the Password and Confirm Password fields entry do not
+            match.
+            Returns true if none of the above cases occur.
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:14pm 01/19/2021
+
+    */
+    /**/
+    private boolean Validate(){
+        m_name = m_RegisterFullName.getText().toString().trim();
+        m_password = m_RegisterPassword.getText().toString().trim();
+        m_confirmPassword = m_RegisterConfirmPassword.getText().toString().trim();
+        m_email = m_RegisterEmail.getText().toString().trim();
 
         if(TextUtils.isEmpty(m_name)){
-            reg_Fullname.setError("Full name is required.");
+            m_RegisterFullName.setError("Full name is required.");
             return false;
         }
 
         if(TextUtils.isEmpty(m_email)){
-            reg_Email.setError("Email is required.");
+            m_RegisterEmail.setError("Email is required.");
             return false;
         }
 
         if(TextUtils.isEmpty(m_password)){
-            reg_Password.setError("Password is required.");
+            m_RegisterPassword.setError("Password is required.");
             return false;
         }
 
         if(m_password.length() < 6){
-            reg_Password.setError("Password must have at least 6 characters.");
+            m_RegisterPassword.setError("Password must have at least 6 characters.");
             return false;
         }
 
         if(!m_password.equals(m_confirmPassword)){
-            reg_Confirmpassword.setError("Password did not match");
+            m_RegisterConfirmPassword.setError("Password did not match");
             return false;
         }
         return true;
     }
 
+    /**/
+    /*
+
+    NAME
+
+            SetupUI - initializes all UI components
+
+    SYNOPSIS
+
+            private void SetupUI()
+
+    DESCRIPTION
+
+            This function initializes all UI components to their respective Views
+            from the layout :activity_registration_page.xml. Uses android method
+            findViewById that, "finds a view that was identified by the android:id
+           XML attribute that was processed in onCreate(Bundle)." Src: Android Documentation
+           (https://developer.android.com/reference/android/app/Activity#findViewById(int))
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:04pm 01/19/2021
+
+    */
+    /**/
     private void SetupUI(){
-        reg_Button = findViewById(R.id.b_register);
-        reg_Fullname = findViewById(R.id.e_fullname);
-        reg_Password = findViewById(R.id.e_regpassword);
-        reg_Confirmpassword = findViewById(R.id.e_confrimpass);
-        reg_Email = findViewById(R.id.e_email);
-        goto_Login = findViewById(R.id.t_gotologin);
-        fAuth = FirebaseAuth.getInstance();
-        fstore = FirebaseFirestore.getInstance();
+        m_RegisterButton = findViewById(R.id.b_register);
+        m_RegisterFullName = findViewById(R.id.e_fullname);
+        m_RegisterPassword = findViewById(R.id.e_regpassword);
+        m_RegisterConfirmPassword = findViewById(R.id.e_confrimpass);
+        m_RegisterEmail = findViewById(R.id.e_email);
+        m_GotoLogin = findViewById(R.id.t_gotologin);
     }
 }

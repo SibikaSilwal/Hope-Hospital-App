@@ -1,6 +1,7 @@
 package com.example.seniorproject_hospitalapp;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +55,10 @@ public class AppointmentManagerAdapter extends RecyclerView.Adapter<AppointmentM
                 holder.PatientName.setText(task.getResult().get("fName").toString());
                 holder.PatientPhone.setText(task.getResult().get("phone").toString());
                 holder.PatientEmail.setText(task.getResult().get("email").toString());
-                holder.ApptTime.setText(data.get(position).get("day").toString()+" on "+data.get(position).get("time").toString());
+                holder.ApptTime.setText(data.get(position).get("day").toString()+" at "+data.get(position).get("time").toString());
+                if(task.getResult().get("profileURL")!=null){
+                    Picasso.get().load(task.getResult().get("profileURL").toString()).into(holder.PatientImg);
+                }
             }
         });
         holder.CancelAppt.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +103,7 @@ public class AppointmentManagerAdapter extends RecyclerView.Adapter<AppointmentM
                 appttoCancel.put("Day", data.get(position).get("day"));
                 appttoCancel.put("Doctor",data.get(position).get("DocName"));
                 appttoCancel.put("DoctorID",data.get(position).get("DocID"));
+                appttoCancel.put("reminderTime",data.get(position).get("ReminderTime"));
                 docRefUser.update("AppointmentsInfo", FieldValue.arrayRemove(appttoCancel))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -123,7 +129,6 @@ public class AppointmentManagerAdapter extends RecyclerView.Adapter<AppointmentM
                                     }
                                 });
                                 dayArr.clear();
-
                             }
                         });
                     }

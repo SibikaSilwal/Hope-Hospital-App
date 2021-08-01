@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
@@ -49,13 +50,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class Appointment extends AdminMenuActivity implements AdapterView.OnItemSelectedListener {
+public class Appointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Toolbar m_mainToolBar;
     Spinner m_docNameSpinner;
-    TextView m_PatientName, m_PatientEmail, m_PatientPhone;
+    TextView m_PatientName, m_PatientEmail, m_PatientPhone, m_apptDate;
     RecyclerView m_AppointmentTimeRecView;
     DocAvailabilityAdapter m_adapter;
 
+    private DatePickerDialog m_datePickerDialog;
     ArrayList<String> m_wards = new ArrayList<>();
     ArrayList<String> m_DocIDs = new ArrayList<>();
     ArrayList<String> m_DocName = new ArrayList<>();
@@ -64,9 +66,51 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
 
     //DOC ID AND NAME MAP
     Map<String, String> m_docIDdocNameMap = new HashMap<>();
-    String m_userID;
-    FirebaseFirestore fstore;
+    private String m_userID, m_selectDate, m_selectDocID;
     //FirebaseAuth fauth;
+    //avails for day: !!!!![{isAvailable=true, StartMinute=52, StartHour=16, AppointmentID=0, EndHour=17, Time=16:52-17:52, EndMinute=52},
+    // {isAvailable=true, StartMinute=52, StartHour=18, AppointmentID=0, EndHour=19, Time=18:52-19:52, EndMinute=52}]
+    private void GetDocAvail(String a_docID){
+        String daysofWeek[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        DocumentReference docref = fstore.collection("Doctors").document(a_docID);
+        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                m_DocAvail.clear();
+                //for(String day : daysofWeek){
+                ArrayList<Map<String, Object>> availsForDay = (ArrayList<Map<String, Object>>) task.getResult().get(m_selectDate);
+                int index = 0;
+                if(availsForDay!= null){
+                    for (Map<String, Object> avail : availsForDay) {
+                        if((boolean)avail.get("isAvailable")){
+                            Map<String, Object> available = new HashMap<>();
+                            String time = (String) avail.get("Time");
+                            Long reminder = (long) avail.get("ReminderTime");
+                            available.put("day", m_selectDate);
+                            available.put("time", time);
+                            available.put("index", index);
+                            available.put("reminderTime", reminder);
+                            m_DocAvail.add(available);
+                        }
+                        index++;
+                    }
+                }else{}
+                //}
+                Map<String, Object> DocandUserID = new HashMap<>();
+                DocandUserID.put("docID", a_docID);
+                DocandUserID.put("userID", m_userID);
+                DocandUserID.put("Doctor", task.getResult().get("DocName").toString());
+
+                m_DocAvail.add(DocandUserID);
+
+                //if(available!=null){m_DocAvail.add(available);}
+                //System.out.println(a_docID + " AVailability: "+ m_DocAvail);
+                m_AppointmentTimeRecView.setAdapter(new DocAvailabilityAdapter(m_DocAvail, Appointment.this));
+            }
+        });
+    }
+    FirebaseFirestore fstore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +125,7 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
 
         setSupportActionBar(m_mainToolBar);
 
+        InitDatePicker();
         m_DocName.add("Select Doctor.");
         GetDoctorsforWard(m_wards);
 
@@ -99,7 +144,6 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
         m_AppointmentTimeRecView.setAdapter(m_adapter);
 
     }
-
 
 
     private void GetDoctorsforWard(ArrayList<String> a_Wardlist) {
@@ -130,52 +174,18 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
             });
         }
     }
-    //avails for day: !!!!![{isAvailable=true, StartMinute=52, StartHour=16, AppointmentID=0, EndHour=17, Time=16:52-17:52, EndMinute=52},
-    // {isAvailable=true, StartMinute=52, StartHour=18, AppointmentID=0, EndHour=19, Time=18:52-19:52, EndMinute=52}]
-    private void GetDocAvail(String a_docID){
-        String daysofWeek[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-        DocumentReference docref = fstore.collection("Doctors").document(a_docID);
-        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                m_DocAvail.clear();
-                for(String day : daysofWeek){
-                    ArrayList<Map<String, Object>> availsForDay = (ArrayList<Map<String, Object>>) task.getResult().get(day);
-                    int index = 0;
-                    if(availsForDay!= null){
-                        for (Map<String, Object> avail : availsForDay) {
-                            if((boolean)avail.get("isAvailable")){
-                                Map<String, Object> available = new HashMap<>();
-                                String time = (String) avail.get("Time");
-                                available.put("day", day);
-                                available.put("time", time);
-                                available.put("index", index);
-                                m_DocAvail.add(available);
-                            }
-                            index++;
-                        }
-                    }else{}
-                }
-                Map<String, Object> DocandUserID = new HashMap<>();
-                DocandUserID.put("docID", a_docID);
-                DocandUserID.put("userID", m_userID);
-                DocandUserID.put("Doctor", task.getResult().get("DocName").toString());
-
-                m_DocAvail.add(DocandUserID);
-
-                //if(available!=null){m_DocAvail.add(available);}
-                //System.out.println(a_docID + " AVailability: "+ m_DocAvail);
-                m_AppointmentTimeRecView.setAdapter(new DocAvailabilityAdapter(m_DocAvail, Appointment.this));
-            }
-        });
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(parent.getItemAtPosition(position).equals("Select Doctor.")){
             //do nothing
         }else{
-            GetDocAvail(m_docIDdocNameMap.get(m_DocName.get(position)));
+            m_selectDocID = m_docIDdocNameMap.get(m_DocName.get(position));
+            System.out.println("dateeeeeeeee"+m_selectDate);
+            if(m_selectDate!=null){
+                GetDocAvail(m_selectDocID);
+            }
+            //
         }
 
     }
@@ -199,6 +209,76 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
             }
         });
     }
+
+    public void InitDatePicker()
+    {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        String Todaysdate = makeDateString(day,month+1, year);
+        m_apptDate.setText(Todaysdate);
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month+1;
+                //String date = makeDateString(dayOfMonth,month, year);
+                m_selectDate = makeDateString(dayOfMonth,month, year);
+                System.out.println("being called? " + m_selectDate);
+                m_apptDate.setText(m_selectDate);
+                System.out.println("doc id here: "+ m_selectDocID);
+                GetDocAvail(m_selectDocID);
+            }
+        };
+        int style = AlertDialog.THEME_HOLO_LIGHT;
+
+        m_datePickerDialog = new DatePickerDialog(this, style, dateSetListener, year, month, day);
+        Calendar calendar = Calendar.getInstance();
+        m_datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis()- 10000); //-10000 because DatePicker dialog could not set a minimum date of the exact current time
+        calendar.add(Calendar.DATE, 14);
+        m_datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+
+    }
+    public void OpenDatePicker(View view)
+    {
+        m_datePickerDialog.show();
+    }
+
+    public String makeDateString(int day, int month, int year)
+    {
+        return getMonthFormat(month) + " " + day + " " + year;
+    }
+
+    private String getMonthFormat(int month)
+    {
+        if(month == 1)
+            return "JAN";
+        if(month == 2)
+            return "FEB";
+        if(month == 3)
+            return "MAR";
+        if(month == 4)
+            return "APR";
+        if(month == 5)
+            return "MAY";
+        if(month == 6)
+            return "JUN";
+        if(month == 7)
+            return "JUL";
+        if(month == 8)
+            return "AUG";
+        if(month == 9)
+            return "SEP";
+        if(month == 10)
+            return "OCT";
+        if(month == 11)
+            return "NOV";
+        if(month == 12)
+            return "DEC";
+
+        //default should never happen
+        return "JAN";
+    }
     private void SetupUI(){
         m_mainToolBar = findViewById(R.id.mtoolbar);
         m_mainToolBar.setTitle("Hope Hospital App");
@@ -206,10 +286,16 @@ public class Appointment extends AdminMenuActivity implements AdapterView.OnItem
         m_PatientName = findViewById(R.id.t_patientName);
         m_PatientEmail = findViewById(R.id.t_patientEmail);
         m_PatientPhone = findViewById(R.id.t_patientPhone);
+        m_apptDate = findViewById(R.id.t_apptDate);
         m_AppointmentTimeRecView = findViewById(R.id.recViewAvailability);
         m_wards = getIntent().getStringArrayListExtra("wards");
         m_userID = getIntent().getStringExtra("patientID");
         fstore = FirebaseFirestore.getInstance();
 
+        //set text for Patients info
+        m_PatientName.setText(getIntent().getStringExtra("name"));
+        m_PatientEmail.setText(getIntent().getStringExtra("email"));
+        m_PatientPhone.setText(getIntent().getStringExtra("phone"));
+        System.out.println("info?: "+getIntent().getStringExtra("email")+" "+getIntent().getStringExtra("phone"));
     }
 }

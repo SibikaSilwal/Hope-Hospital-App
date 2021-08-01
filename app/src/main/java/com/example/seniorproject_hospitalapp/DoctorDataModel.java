@@ -5,17 +5,45 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DoctorDataModel {
-    String DocName, DocID, profileURL;
+    String DocName, DocID, profileURL, DocEmail, DocPhone, DocBio;
     ArrayList<Map<String, Object>> Sunday, Monday;
     ArrayList<Map<String, String>> DoctorAppointments = new ArrayList<Map<String, String>>();
     public  DoctorDataModel(){}
 
-    public DoctorDataModel(String docName, String docID, String profileurl, ArrayList<Map<String, Object>> sunday, ArrayList<Map<String, Object>> monday) {
+    public DoctorDataModel(String docName, String docID, String profileurl, ArrayList<Map<String, Object>> sunday, ArrayList<Map<String, Object>> monday
+        , String docEmail, String docPhone, String docBio) {
         DocName = docName;
         DocID = docID;
+        DocEmail = docEmail;
+        DocPhone = docPhone;
+        DocBio = docBio;
         profileURL = profileurl;
         Sunday = sunday;
         Monday = monday;
+    }
+
+    public String getDocEmail() {
+        return DocEmail;
+    }
+
+    public void setDocEmail(String docEmail) {
+        DocEmail = docEmail;
+    }
+
+    public String getDocPhone() {
+        return DocPhone;
+    }
+
+    public void setDocPhone(String docPhone) {
+        DocPhone = docPhone;
+    }
+
+    public String getDocBio() {
+        return DocBio;
+    }
+
+    public void setDocBio(String docBio) {
+        DocBio = docBio;
     }
 
     public String getDocID() {

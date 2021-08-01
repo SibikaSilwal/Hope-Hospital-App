@@ -3,12 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
    >
-
+    <item
+        android:id="@+id/mitem_Doctors"
+        android:title="Search Doctors"
+        app:showAsAction="never"
+        android:tooltipText="Search Doctors"
+        />
     <item
         android:id="@+id/mitem_documents"
         android:title="View Documents"
         app:showAsAction="never"
         android:tooltipText="View Documents"
+        />
+    <item
+        android:id="@+id/mitem_UploadDocuments"
+        android:title="Upload Insurance"
+        app:showAsAction="never"
+        android:tooltipText="Upload Insurance"
         />
     <item
         android:id="@+id/mitem_settings"
@@ -30,6 +41,12 @@
     <item
         android:id="@+id/mitem_journal"
         android:title="My Journal"
+        app:showAsAction="never"
+        android:tooltipText="My Journal"
+        />
+    <item
+        android:id="@+id/mitem_logOut"
+        android:title="Logout"
         app:showAsAction="never"
         android:tooltipText="My Journal"
         />

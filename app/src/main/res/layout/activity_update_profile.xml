@@ -4,110 +4,313 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UpdateProfile">
+    tools:context=".UpdateProfile"
+    android:background="#E6E6FA">
 
-    <include layout="@layout/main_toolbar" />
-
-    <TextView
-        android:id="@+id/t_fullname"
-        android:layout_width="102dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="85dp"
-        android:text="@string/name"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/i_avatar" />
-
-    <EditText
-        android:id="@+id/e_fullnameUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.462"
-        app:layout_constraintStart_toEndOf="@+id/t_fullname"
-        app:layout_constraintTop_toBottomOf="@+id/i_avatar" />
-
-    <TextView
-        android:id="@+id/t_updatepageEmail"
-        android:layout_width="95dp"
-        android:layout_height="23dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="34dp"
-        android:text="@string/regemail"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/t_fullname" />
-
-    <EditText
-        android:id="@+id/e_emailUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/t_updatepageEmail"
-        app:layout_constraintTop_toBottomOf="@+id/e_fullnameUpdate" />
-
-    <TextView
-        android:id="@+id/t_phonenum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="34dp"
-        android:text="@string/phonenum"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/t_updatepageEmail" />
-
-    <EditText
-        android:id="@+id/e_phonenumUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.587"
-        app:layout_constraintStart_toEndOf="@+id/t_phonenum"
-        app:layout_constraintTop_toBottomOf="@+id/e_emailUpdate" />
-
-    <ImageView
-        android:id="@+id/i_avatar"
-        android:layout_width="177dp"
-        android:layout_height="112dp"
-        android:layout_marginTop="92dp"
+    <include
+        android:id="@+id/mtoolbar"
+        layout="@layout/main_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/profileavatar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/b_saveinfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="176dp"
-        android:text="Save"
-        android:textSize="18sp"
-        app:backgroundTint="@color/button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/e_phonenum"
-        app:layout_constraintVertical_bias="0.448" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="55dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/bottom_right_curved_background"
+                android:backgroundTint="#8B008B"
+                android:elevation="4dp"
+                android:gravity="center_vertical"
+                android:padding="2dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/i_avatar"
+                    android:layout_width="120dp"
+                    android:layout_height="105dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/patient_avatar"
+                    app:civ_border_color="#DDA0DD"
+                    app:civ_border_width="2dp"
+                     />
+                <TextView
+                    android:id="@+id/t_yourwards"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="Wards you are in:\n"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingRight="20dp"
+                android:orientation="horizontal"
+                android:paddingBottom="14dp"
+                android:paddingTop="4dp"
+                android:background="#D8BFD8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/i_avatar">
+
+                <TextView
+                    android:id="@+id/t_fullname"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="@string/name"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/i_avatar" />
+
+                <EditText
+                    android:id="@+id/e_fullnameUpdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:inputType="textPersonName"
+                    android:padding="10dp"
+                    android:text=""
+                    android:hint="Full Name"
+                    android:background="@drawable/customized_input_box"
+                    android:elevation="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.462"
+                    app:layout_constraintStart_toEndOf="@+id/t_fullname"
+                    app:layout_constraintTop_toBottomOf="@+id/i_avatar" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:paddingBottom="14dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="20dp"
+                android:background="#D8BFD8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
+
+                <TextView
+                    android:id="@+id/t_updatepageEmail"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="@string/regemail"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/t_fullname" />
+
+                <EditText
+                    android:id="@+id/e_emailUpdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:inputType="textEmailAddress"
+                    android:padding="10dp"
+                    android:text=""
+                    android:hint="Email Address"
+                    android:background="@drawable/customized_input_box"
+                    android:elevation="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/t_updatepageEmail"
+                    app:layout_constraintTop_toBottomOf="@+id/e_fullnameUpdate" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="14dp"
+                android:paddingTop="4dp"
+                android:paddingRight="20dp"
+                android:background="#D8BFD8"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout9"
+                tools:layout_editor_absoluteX="43dp">
+
+                <TextView
+                    android:id="@+id/t_phonenum"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="@string/phonenum"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/e_phonenumUpdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:inputType="textPersonName"
+                    android:padding="10dp"
+                    android:text=""
+                    android:hint="Phone Number"
+                    android:background="@drawable/customized_input_box"
+                    android:elevation="8dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="14dp"
+                android:paddingTop="4dp"
+                android:paddingRight="20dp"
+                android:background="#D8BFD8"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout10"
+                tools:layout_editor_absoluteX="43dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="Gender"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/e_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:inputType="textPersonName"
+                    android:padding="10dp"
+                    android:text=""
+                    android:hint="Your gender"
+                    android:background="@drawable/customized_input_box"
+                    android:elevation="8dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="14dp"
+                android:paddingTop="4dp"
+                android:paddingRight="20dp"
+                android:background="#D8BFD8"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout11"
+                tools:layout_editor_absoluteX="43dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="Blood Group"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/e_bloodGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:inputType="textPersonName"
+                    android:padding="10dp"
+                    android:text=""
+                    android:hint="Your blood group"
+                    android:background="@drawable/customized_input_box"
+                    android:elevation="8dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="14dp"
+                android:paddingTop="4dp"
+                android:paddingRight="20dp"
+                android:background="#D8BFD8"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout12"
+                tools:layout_editor_absoluteX="43dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="Address"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/e_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:inputType="textPersonName"
+                    android:padding="10dp"
+                    android:text=""
+                    android:hint="Your address"
+                    android:background="@drawable/customized_input_box"
+                    android:elevation="8dp"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/b_saveinfo"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal"
+                android:text="Save"
+                android:textSize="18sp"
+                android:background="@drawable/customized_button"
+                android:elevation="12dp"
+                android:paddingStart="8dp"
+                app:backgroundTint="#9C27B0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
