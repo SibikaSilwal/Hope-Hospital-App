@@ -121,7 +121,6 @@
         android:layout_marginBottom="50dp"
         android:background="@drawable/customized_button"
         android:elevation="12dp"
-        android:paddingStart="8dp"
         android:text="@string/regbutton"
         app:backgroundTint="#9C27B0"
         app:layout_constraintBottom_toTopOf="@+id/t_gotologin"

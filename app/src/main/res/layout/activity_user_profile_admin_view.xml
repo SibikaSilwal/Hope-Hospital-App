@@ -300,16 +300,17 @@
                     </LinearLayout>
                 </LinearLayout>
 
-            <Button
-                android:id="@+id/b_uploadPatientDoc"
-                android:layout_width="wrap_content"
-                android:layout_height="45dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/customized_button"
-                android:text="Upload"
-                app:backgroundTint="#8B008B" />
+                <Button
+                    android:id="@+id/b_uploadPatientDoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/customized_button"
+                    android:text="Upload"
+                    app:backgroundTint="#8B008B" />
 
-        </LinearLayout>
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/UserWardLinearView"
                 android:layout_width="match_parent"
@@ -364,6 +365,34 @@
                     android:textColor="@color/black" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayoutUserInsurance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/customized_button"
+                android:backgroundTint="@color/white"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:onClick="ViewPatientInsurance">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View Patient's Insurance Card >>"
+                    android:fontFamily="@font/hind_regular"
+                    android:textColor="@color/mdtp_red"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+
+
+
         </LinearLayout>
 
     </ScrollView>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E6E6FA"
     tools:context=".AdminHome">
 
     <include
@@ -163,8 +164,71 @@
         </LinearLayout>
 
 
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/customized_button"
+        android:backgroundTint="@color/white"
+        android:orientation="vertical"
+        android:padding="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AdminHomeGridLayoutParent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginLeft="10dp"
+            android:drawableLeft="@drawable/insurance_tick"
+            android:drawablePadding="5dp"
+            android:fontFamily="@font/hind_regular"
+            android:padding="0dp"
+            android:text="Insurances accepted"
+            android:textAlignment="textStart"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:typeface="normal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:fontFamily="@font/hind_regular"
+            android:drawableLeft="@drawable/ic_baseline_arrow_right_24"
+            android:drawablePadding="5dp"
+            android:padding="0dp"
+            android:text="First Health Network"
+            android:textColor="@color/mdtp_red"
+            android:textSize="18dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:fontFamily="@font/hind_regular"
+            android:drawableLeft="@drawable/ic_baseline_arrow_right_24"
+            android:drawablePadding="5dp"
+            android:padding="0dp"
+            android:text="Multiplan Network"
+            android:textColor="@color/mdtp_red"
+            android:textSize="18dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:fontFamily="@font/hind_regular"
+            android:drawableLeft="@drawable/ic_baseline_arrow_right_24"
+            android:drawablePadding="5dp"
+            android:padding="0dp"
+            android:text="Blue Cross Blue Shield"
+            android:textColor="@color/mdtp_red"
+            android:textSize="18dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -43,35 +43,66 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * This class represents the GlobalDocAdmin activity which provides an interface
+ * for admins to view, add, change, and delete the Global documents of their
+ * organization.
+ */
 public class GlobalDocAdmin extends AdminMenuActivity {
-    Toolbar m_mainToolBar;
+    private Toolbar m_mainToolBar;
     private RecyclerView m_recview;
     private GlobalDocRecViewAdapter m_recviewAdapter;
-
     private EditText m_DocName;
-    private TextView m_GlobalDocName;
-    private Button m_changeFileBtn, m_uploadFileBtn, m_deleteFileBtn;
     private ImageView m_PDFicon;
     private Uri m_newFileURI;
-    private FirebaseAuth fAuth;
-    private FirebaseFirestore fStore;
-    private StorageReference storageReference, m_fileRef;
-    private DocumentReference docReference;
-    private String m_docId, m_fileName; //firestore doc id and filename to be uploaded //strings for pdf upload
-    private String m_fileURL, m_finalURL,  m_docName; //strings for pdf view
-    private WebView m_webView;
+    private String m_fileName, m_fileUrl;
+    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
-    /*new*/
-    private String m_fileUrl;
+    /**/
+    /*
 
+    NAME
+
+            onCreate - initializes ViewUserDocuments activity..
+
+    SYNOPSIS
+
+            protected void onCreate(Bundle a_savedInstanceState);
+                a_savedInstanceState     --> the activity's previously frozen state, if there was one
+
+    DESCRIPTION
+
+            This function initialized the GlobalDocAdmin activity and links it to its
+            respective layout resource file i.e. activity_global_doc_admin.xml
+            which allows retrieving the Widgets and Views used in the layout to
+            perform actions and handle events as required, by setting the events
+            listeners.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:20pm 02/17/2021
+
+    */
+    /**/
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle a_savedInstanceState) {
+        super.onCreate(a_savedInstanceState);
         setContentView(R.layout.activity_global_doc_admin);
+
+        //Set up for initial UI components
         SetupUI();
         setSupportActionBar(m_mainToolBar);
 
-
+        //creates a FirestoreRecyclerOptions object that queries GlobalDoc collection and orders result by fileName
         FirestoreRecyclerOptions<GlobalDocModel> options =
                 new FirestoreRecyclerOptions.Builder<GlobalDocModel>()
                         .setQuery(fStore.collection("GlobalDoc").orderBy("fileName"), GlobalDocModel.class)
@@ -80,6 +111,7 @@ public class GlobalDocAdmin extends AdminMenuActivity {
         m_recviewAdapter = new GlobalDocRecViewAdapter(options, GlobalDocAdmin.this);
         m_recview.setAdapter(m_recviewAdapter);
 
+        //invokes onActivityResult method to pick a new file when the add pdf icon is clicked
         m_PDFicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,13 +129,41 @@ public class GlobalDocAdmin extends AdminMenuActivity {
             }
         });
 
-
-
     }
 
-    public void ChangePdf(String a_fileName ){ //called from GlobalDocRecylerAdapter Class
-        System.out.println("Helloo there, its meeee");
-        m_fileName= a_fileName; //uploading document's filename
+    /**/
+    /*
+
+    NAME
+
+            ChangePdf - invokes onActivityResult method
+
+    SYNOPSIS
+
+           public void ChangePdf(String a_fileName)
+                a_fileName    --> Name of the file for the file being picked from device
+
+    DESCRIPTION
+
+            This function fires up onActivityResult method with request code 2001 which
+            allows users to pick a file from their device.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:30pm 02/17/2021
+
+    */
+    /**/
+    public void ChangePdf(String a_fileName){
+        m_fileName= a_fileName;
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getIntent.setType("*/*");
         Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -114,48 +174,108 @@ public class GlobalDocAdmin extends AdminMenuActivity {
         startActivityForResult(chooserIntent, 2001);
     }
 
-    //overriding the onactivityresult function, the "data" attribute has the img_uri,
-    //different functions/intents can be invoking the onActivityResult function therefore,
-    //its required/good to check the intent that is invoking the method, so we use reqcode
+    /**/
+    /*
+
+    NAME
+
+            onActivityResult - fires new intent to pick file from the device
+
+    SYNOPSIS
+
+            private void onActivityResult(int requestCode, int resultCode, @Nullable Intent data);
+                requestCode  --> an integer to identify the intent firing onActivityResult
+                resultCode   --> an integer value that represents the status of the result of onActivityResult
+                data         --> intent data returned from the launched intent
+
+    DESCRIPTION
+
+            This function overrides the onActivityResult function and is called when the pdf
+            icon view is clicked, to pick a new file from Device to upload to database.
+            Different functions/intents can be invoking the onActivityResult function
+            therefore, to check the intent that is invoking the method, its request code
+            is checked, in this case request code 2000 and 2001. The "data" attribute has
+            the file uri, that has been picked from the device.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:30pm 02/17/2021
+
+    */
+    /**/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        //2000 while uploading a new file in database
         if(requestCode==2000){
-            if(resultCode == Activity.RESULT_OK){ //do we have any result on the data? so check
-                //Uri imageUri = data.getData();
+            if(resultCode == Activity.RESULT_OK){
                 m_newFileURI= data.getData();
-                //m_profileImage.setImageURI(imageUri);
-                //UploadImagetoFirebase(imageUri, m_fileName);
             }
         }
+        //2001 while changing an existing file
         if(requestCode==2001){
-            if(resultCode == Activity.RESULT_OK){ //do we have any result on the data? so check
+            if(resultCode == Activity.RESULT_OK){
                 Uri imageUri = data.getData();
-                //m_newFileURI= data.getData();
-                //m_profileImage.setImageURI(imageUri);
-                UploadImagetoFirebase(imageUri, m_fileName);
+                UploadDocumentToFirebase(imageUri, m_fileName);
             }
         }
     }
-    public void AddNewDocument(View a_view){
-        if(m_newFileURI==null||m_fileName==null){
-            Toast.makeText(GlobalDocAdmin.this, "Please make sure to choose a file and enter filename.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        UploadImagetoFirebase(m_newFileURI,m_fileName);
-        m_DocName.setText("");
-        Toast.makeText(GlobalDocAdmin.this, "New ward was created successfully.", Toast.LENGTH_SHORT).show();
-    }
-    private void UploadImagetoFirebase(Uri a_imageuri, String a_fileName) {
+
+    /**/
+    /*
+
+    NAME
+
+            UploadDocumentToFirebase - Uploads global documents in firebase database
+
+    SYNOPSIS
+
+            private void UploadDocumentToFirebase(Uri a_fileUri, String a_fileName)
+                a_fileUri     --> Upload uri of the chosen file
+                a_fileName    --> Name of the file being uploaded
+
+    DESCRIPTION
+
+            This function uploads the passed file uri in the firebase storage. It
+            also stores the file's download URI in Firestore database in "Global Doc"
+            collection.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:30pm 03/2/2021
+
+    */
+    /**/
+    private void UploadDocumentToFirebase(Uri a_fileUri, String a_fileName) {
         StorageReference fileRef = storageReference.child("GlobalDoc/"+a_fileName+"file.pdf");
-        fileRef.putFile(a_imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        fileRef.putFile(a_fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(GlobalDocAdmin.this, "File Uploaded Successfully", Toast.LENGTH_SHORT).show();
                 fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        m_fileUrl = uri.toString(); //this is the download url of the uploaded file
+                        //the download url of the uploaded file
+                        m_fileUrl = uri.toString();
+
+                        //storing it in firestore database as string
                         DocumentReference docRef = fStore.collection("GlobalDoc").document(a_fileName);
                         Map<String, Object> fileDocNew = new HashMap<>();
                         fileDocNew.put("file",m_fileUrl);
@@ -168,35 +288,168 @@ public class GlobalDocAdmin extends AdminMenuActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(GlobalDocAdmin.this, "Failed uploading image", Toast.LENGTH_SHORT).show();
-                System.out.println("Failed upload");
             }
         });
     }
 
-    private void SetupUI(){
-        m_mainToolBar= findViewById(R.id.mtoolbar);
-        m_mainToolBar.setTitle("Global Documents");
-        m_recview = findViewById(R.id.globaldocreyclerview);
-        m_recview.setLayoutManager(new LinearLayoutManager(this));
-        m_uploadFileBtn = findViewById(R.id.b_GdocUpload);
-        m_PDFicon=findViewById(R.id.globalDocFileIcon);
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
-        m_DocName= findViewById(R.id.e_GDocUploadFileName);
-        docReference = fStore.collection("GlobalDoc").document("PrivacyPolicyDocs");
-        m_docId = "PrivacyPolicyDocs";
+    /**/
+    /*
+
+    NAME
+
+            AddNewDocument - calls the UploadDocumentToFirebase function
+
+    SYNOPSIS
+
+            public void AddNewDocument(View a_view)
+                a_view     --> view provided
+
+    DESCRIPTION
+
+            This function calls the UploadDocumentToFirebase function which then
+            uploads the new file to firebase database. This function gets called
+            when the Upload button view is clicked.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            2:30pm 02/17/2021
+
+    */
+    /**/
+    public void AddNewDocument(View a_view){
+        if(m_newFileURI==null||m_fileName==null){
+            Toast.makeText(GlobalDocAdmin.this, "Please make sure to choose a file and enter filename.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        UploadDocumentToFirebase(m_newFileURI,m_fileName);
+        m_DocName.setText("");
+        Toast.makeText(GlobalDocAdmin.this, "New file uploaded successfully.", Toast.LENGTH_SHORT).show();
     }
 
+    /**/
+    /*
+
+    NAME
+
+            onStart - This function overrides the onStart function which is called just after the onCreate()
+            function is called at the launch of an activity. This function when called tells the adapter to
+            start listening for new items for recycler view
+
+    SYNOPSIS
+
+            protected void onStart()
+
+    DESCRIPTION
+
+            This function overrides the onStart.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:30pm 02/17/2021
+
+    */
+    /**/
     @Override
     protected void onStart() {
         super.onStart();
         m_recviewAdapter.startListening();
     }
 
+    /**/
+    /*
+
+    NAME
+
+            onStop - tells the adapter to stop listening
+
+    SYNOPSIS
+
+            protected void onStop()
+
+    DESCRIPTION
+
+            This function overrides onStop method which is called when an activity is in background.
+            This function tells the adapter to stop listening since the activity is no longer active
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:30pm 02/17/2021
+
+    */
+    /**/
     @Override
     protected void onStop() {
         super.onStop();
         m_recviewAdapter.stopListening();
     }
+
+    /**/
+    /*
+
+    NAME
+
+            SetupUI - initializes all UI components
+
+    SYNOPSIS
+
+            private void SetupUI()
+
+    DESCRIPTION
+
+            This function initializes all UI components to their respective Views
+            from the layout :activity_global_doc_admin.xml. Uses android method
+            findViewById that, "finds a view that was identified by the android:id
+           XML attribute that was processed in onCreate(Bundle)." Src: Android Documentation
+           (https://developer.android.com/reference/android/app/Activity#findViewById(int))
+           It also calls all other helper functions used in setting up the UI and getting
+           contents for all the Views.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:30pm 02/17/2021
+
+    */
+    /**/
+    private void SetupUI(){
+        m_mainToolBar= findViewById(R.id.mtoolbar);
+        m_mainToolBar.setTitle("");
+        m_recview = findViewById(R.id.globaldocreyclerview);
+        m_recview.setLayoutManager(new LinearLayoutManager(this));
+        m_PDFicon=findViewById(R.id.globalDocFileIcon);
+        m_DocName= findViewById(R.id.e_GDocUploadFileName);
+    }
+
+
 }

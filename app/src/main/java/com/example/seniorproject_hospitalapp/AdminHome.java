@@ -1,90 +1,343 @@
 package com.example.seniorproject_hospitalapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
+import com.google.type.DateTime;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 
+/**
+ * This class represents the Home page in Admin interface. This class
+ * mostly provides navigation option to the admins from the activity itself, to
+ * the four most important pages in the admin interface of the application i.e.
+ * Search Doctors, Search Patients, Manage Wards, and Manage Global Documents.
+ * Admin homepage also has a functionality to delete old data from database
+ * once everyday automatically.
+ */
 public class AdminHome extends AdminMenuActivity {
     private ConstraintLayout m_AdminHomeGridParent;
     private LinearLayout m_LinearLayoutDoctors, m_LinearLayoutPatients, m_LinearLayoutWards, m_LinearLayoutDocuments;
-    //public static final String Tag2 = "TAG";
-    Toolbar m_mainToolBar;
-    EditText msg;
-    Button save, m_DocSearch;//, m_uploadFileBtn, m_ViewPDFBtn;
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
-    private StorageReference storageReference;
-    String newMsg;
-    private String m_docId, m_fileName; //firestore doc id and filename to be uploaded
+    private Toolbar m_mainToolBar;
     private float m_pixeltodpConversion = Resources.getSystem().getDisplayMetrics().density;
     private int m_AdminHomeGridBoxMarginLeftRight, m_AdminHomeGridBoxMarginTopBottom;
 
-    SettingsPage m_SettingsClassObject = new SettingsPage();
+    private Appointment m_apptObject = new Appointment(); //Appointment class object to use the appointment class method (makeDate).
+    private FirebaseFirestore m_fStore = FirebaseFirestore.getInstance();
+    //UserAppointmentsPage class object to use the UserAppointmentsPage class methods.
+    UserAppointmentsPage m_UserApptClassObject = new UserAppointmentsPage();
+
+    /**/
+    /*
+
+    NAME
+
+            onCreate - initializes AdminHome activity..
+
+    SYNOPSIS
+
+            protected void onCreate(Bundle a_savedInstanceState);
+                a_savedInstanceState     --> the activity's previously frozen state, if there was one
+
+    DESCRIPTION
+
+            This function initialized the AdminHome activity and links
+            it to its respective layout resource file i.e. activity_admin_home
+            which allows retrieving the Widgets and Views used in the layout to
+            perform actions and handle events as required, by setting the events
+            listeners.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:24pm 01/30/2021
+
+    */
+    /**/
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle a_savedInstanceState) {
+        super.onCreate(a_savedInstanceState);
         setContentView(R.layout.activity_admin_home);
         SetupUI();
         setSupportActionBar(m_mainToolBar);
 
-        //CleanDatabase();
+        //Class DeleteOldSchedules method only once per each day.
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        String toDayDate = formatter.format(date);
+        String lastVisitDate = preference.getString("mDateKey", "15/08/2021");
+
+        if (toDayDate.equals(lastVisitDate)) {
+            // this is same day visit again and again
+        } else {
+            // this is the  first time function is being accessed for the day
+            preference.edit().putString("mDateKey", toDayDate);
+            preference.edit().commit();
+            DeleteOldSchedules();
+        }
+
     }
 
+    /**/
+    /*
+
+    NAME
+
+            Doctors - navigates user to SearchDoctorsAdmin
+
+    SYNOPSIS
+
+            private void Doctors(View a_view)
+                a_view     --> view provided
+
+    DESCRIPTION
+
+            This function navigates admins to SearchDoctorsAdmin. This function is provided
+            in the onClick attribute in xml file for the Doctors Grid in admin homepage. The
+            function gets called when the Doctors view is clicked
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            2:30pm 07/26/2021
+
+    */
+    /**/
     public void Doctors(View a_view){
         startActivity(new Intent(getApplicationContext(), SearchDoctorsAdmin.class));
     }
+    /**/
+    /*
+
+    NAME
+
+            Users - navigates user to SearchUsersAdmin
+
+    SYNOPSIS
+
+            private void Users(View a_view)
+                a_view     --> view provided
+
+    DESCRIPTION
+
+            This function navigates admins to SearchUsersAdmin. This function is provided
+            in the onClick attribute in xml file for the Users Grid in admin homepage. The function
+            gets called when the Users view is clicked
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            2:30pm 07/26/2021
+
+    */
+    /**/
     public void Users(View a_view){
         startActivity(new Intent(getApplicationContext(), SearchUsersAdmin.class));
     }
+
+    /**/
+    /*
+
+    NAME
+
+            Wards - navigates user to ManageGroupAdmin
+
+    SYNOPSIS
+
+            private void Wards(View a_view)
+                a_view     --> view provided
+
+    DESCRIPTION
+
+            This function navigates admins to ManageGroupAdmin. This function is provided
+            in the onClick attribute in xml file for the Wards Grid in homepage. The function
+            gets called when the Wards view is clicked
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            2:30pm 07/26/2021
+
+    */
+    /**/
     public void Wards(View a_view){
         startActivity(new Intent(getApplicationContext(), ManageGroupAdmin.class));
     }
+
+    /**/
+    /*
+
+    NAME
+
+            Documents - navigates user to GlobalDocAdmin
+
+    SYNOPSIS
+
+            private void Documents(View a_view)
+                a_view     --> view provided
+
+    DESCRIPTION
+
+            This function navigates admins to GlobalDocAdmin. This function is provided
+            in the onClick attribute in xml file for the Documents Grid in homepage. The function
+            gets called when the Documents view is clicked
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            2:30pm 07/26/2021
+
+    */
+    /**/
     public void Documents(View a_view){
         startActivity(new Intent(getApplicationContext(), GlobalDocAdmin.class));
     }
+
+    /**/
+    /*
+
+    NAME
+
+            SetLeftRightMarginForGrids - sets the same left and right margin for the provided views
+
+    SYNOPSIS
+
+            private void SetLeftRightMarginForGrids(View a_view)
+                a_view     --> view provided to set the margins for
+
+    DESCRIPTION
+
+            This function calls SetMargins function from UserAppointmentsPage class for the provided view.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:30am 07/26/2021
+
+    */
+    /**/
     private void SetLeftRightMarginForGrids(View a_view){
-        //System.out.println("margin: "+ m_HomeGridBoxMarginLeftRight + "conversion: "+m_pixeltodpConversion+" width: "+m_HomeGridParent.getWidth());
-        m_SettingsClassObject.SetMargins(a_view, m_AdminHomeGridBoxMarginLeftRight,m_AdminHomeGridBoxMarginTopBottom, m_AdminHomeGridBoxMarginLeftRight,m_AdminHomeGridBoxMarginTopBottom );
+        m_UserApptClassObject.SetMargins(a_view,
+                                         m_AdminHomeGridBoxMarginLeftRight,
+                                         m_AdminHomeGridBoxMarginTopBottom,
+                                         m_AdminHomeGridBoxMarginLeftRight,
+                                         m_AdminHomeGridBoxMarginTopBottom );
     }
 
+    /**/
+    /*
+
+    NAME
+
+            SetupUI - initializes all UI components
+
+    SYNOPSIS
+
+            private void SetupUI()
+
+    DESCRIPTION
+
+            This function initializes all UI components to their respective Views
+            from the layout :activity_admin_home.xml. Uses android method
+            findViewById that, "finds a view that was identified by the android:id
+           XML attribute that was processed in onCreate(Bundle)." Src: Android Documentation
+           (https://developer.android.com/reference/android/app/Activity#findViewById(int))
+           It also calls all other helper functions used in setting up the UI and getting
+           contents for all the Views.
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            7:30pm 01/30/2021
+
+    */
+    /**/
     private void SetupUI(){
         m_mainToolBar= findViewById(R.id.mtoolbar);
-        m_mainToolBar.setTitle("Hope Hospital App");
+        m_mainToolBar.setTitle("");
         m_AdminHomeGridParent = findViewById(R.id.AdminHomeGridLayoutParent);
         m_LinearLayoutDoctors = findViewById(R.id.linearLayoutDoctors);
         m_LinearLayoutPatients = findViewById(R.id.LinearLayoutPatient);
@@ -102,76 +355,73 @@ public class AdminHome extends AdminMenuActivity {
                 SetLeftRightMarginForGrids(m_LinearLayoutDocuments);
             }
         });
-        //save = findViewById(R.id.b_try);
-        //msg=findViewById(R.id.e_try);
-        //m_DocSearch = findViewById(R.id.b_gotoDocSearch);
-       // m_uploadFileBtn = findViewById(R.id.b_uploadFile);
-        //m_ViewPDFBtn= findViewById(R.id.b_viewpdf);
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
+
     }
 
-    private void CleanDatabase() {
+
+    /**/
+    /*
+
+    NAME
+
+            DeleteOldSchedules - deletes a day old appointments data from Doctor's collection
+
+    SYNOPSIS
+
+            private void DeleteOldSchedules(View a_view)
+                a_view     --> view provided
+
+    DESCRIPTION
+
+            This function deletes Doctor's past schedule from the database. This
+            function is ran only once everyday the first time Admin Homepage is
+            accessed. When the function runs, it deletes the previous day's
+            appointment / schedules information from Doctor's collection. However,
+            all the appointment information are still available in patient's collection
+
+    RETURNS
+
+            nothing
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            2:30pm 07/26/2021
+
+    */
+    /**/
+    private void DeleteOldSchedules(){
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR, 23);
-        cal.set(Calendar.MINUTE, 59);
-        //getting the alarm manager
-        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        cal.add(Calendar.DAY_OF_MONTH, -1);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        String YesterdaysDate = m_apptObject.MakeDateString(day, month + 1, year);
 
-        //creating a new intent specifying the broadcast receiver
-        Intent i = new Intent(this, ReminderAlarm.class);
-        i.putExtra("ScheduleType", "Cleaning Database.");
-        //creating a pending intent using the intent
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+        CollectionReference db_DOC= m_fStore.collection("Doctors");
 
-        //setting the repeating alarm that will be fired every day
-        //am.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
-
-        DateFormat simple = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:SSS Z");
-        System.out.println("time: "+ simple.format(cal.getTimeInMillis()));
-    }
-
-    /* //overriding the onactivityresult function, the "data" attribute has the img_uri,
-    //different functions/intents can be invoking the onActivityResult function therefore,
-    //its required/good to check the intent that is invoking the method, so we use reqcode
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(Tag2, "here 1???: ");
-        if(requestCode==2000){
-            if(resultCode == Activity.RESULT_OK){ //do we have any result on the data? so check
-                Uri imageUri = data.getData();
-                Log.d(Tag2, "here 2???: ");
-                //m_profileImage.setImageURI(imageUri);
-                UploadImagetoFirebase(imageUri, m_docId, m_fileName);
-            }
-        }
-    }
-
-    private void UploadImagetoFirebase(Uri a_imageuri, String a_documendID, String a_fileName) {
-        StorageReference fileRef = storageReference.child("GlobalDoc/"+a_documendID+a_fileName);
-        fileRef.putFile(a_imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        //cleaning doctor's collection
+        db_DOC.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(AdminHome.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
 
-                Log.d(Tag2, "Uploaded???: ");
-                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        //Picasso.get().load(uri).into(m_profileImage);
-                        Toast.makeText(AdminHome.this, "File loaded successfully", Toast.LENGTH_SHORT).show();
+                        ArrayList<Map<String, Object>> YesterdaysAppointments = (ArrayList<Map<String, Object>>) document.get(YesterdaysDate);
+
+                        if(YesterdaysAppointments!=null){
+                            Map<String,Object> updates = new HashMap<>();
+                            updates.put(YesterdaysDate, FieldValue.delete());
+                            db_DOC.document(document.getId()).update(updates);
+                        }
                     }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(AdminHome.this, "Failed uploading image", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
-    */
+
+
 }

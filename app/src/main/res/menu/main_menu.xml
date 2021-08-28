@@ -22,12 +22,6 @@
         android:tooltipText="Upload Insurance"
         />
     <item
-        android:id="@+id/mitem_settings"
-        android:title="@string/settings"
-        app:showAsAction="never"
-        android:tooltipText="@string/settings"
-        />
-    <item
         android:id="@+id/mitem_profile"
         android:title="Profile"
         app:showAsAction="never"

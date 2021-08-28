@@ -88,7 +88,7 @@ public class RegistrationPage extends AppCompatActivity {
 
         //if the user is already registered, sends them to HomePage activity
         if(m_fAuth.getCurrentUser()!=null){
-            startActivity(new Intent(getApplicationContext(), HomePage.class));
+            startActivity(new Intent(getApplicationContext(), LoginPage.class));
         }
 
         //Provides an option for to login for users who already have an account and Directs user to login page

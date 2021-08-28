@@ -29,9 +29,8 @@
         <activity android:name=".GlobalDocAdmin" />
         <activity android:name=".PdfViewer" />
         <activity android:name=".AdminHome" />
-        <activity android:name=".UserProfile" />
         <activity android:name=".UpdateProfile" />
-        <activity android:name=".SettingsPage" />
+        <activity android:name=".UserAppointmentsPage" />
         <activity android:name=".HomePage" />
         <activity android:name=".RegistrationPage" />
         <activity android:name=".LoginPage">

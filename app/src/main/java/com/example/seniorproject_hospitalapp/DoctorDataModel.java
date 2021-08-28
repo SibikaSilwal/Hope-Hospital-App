@@ -1,30 +1,36 @@
 package com.example.seniorproject_hospitalapp;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+* This is DoctorDataModel class which represents each Doctor and their properties. It has all
+* the necessary setter and getter functions for Doctor's properties and other functions associated
+* with Doctors. This class also works as Firebase recycler view's model class for recycler view
+* adapter like SearchDoctorsAdmin.
+*
+* */
 public class DoctorDataModel {
-    String DocName, DocID, profileURL, DocEmail, DocPhone, DocBio;
-    ArrayList<Map<String, Object>> Sunday, Monday;
-    ArrayList<Map<String, String>> DoctorAppointments = new ArrayList<Map<String, String>>();
+
+    private String DocName, DocID, profileURL, DocEmail, DocPhone, DocBio;
+    private ArrayList<String> WardName = new ArrayList<>();
+
+    //Empty constructor for DoctorDataModel which is required for Firestore's automatic data mapping
     public  DoctorDataModel(){}
 
-    public DoctorDataModel(String docName, String docID, String profileurl, ArrayList<Map<String, Object>> sunday, ArrayList<Map<String, Object>> monday
-        , String docEmail, String docPhone, String docBio) {
-        DocName = docName;
-        DocID = docID;
-        DocEmail = docEmail;
-        DocPhone = docPhone;
-        DocBio = docBio;
-        profileURL = profileurl;
-        Sunday = sunday;
-        Monday = monday;
-    }
 
-    public String getDocEmail() {
-        return DocEmail;
-    }
+    //Getter and Setter for the class's member variables
+
+    public String getDocEmail() { return DocEmail; }
 
     public void setDocEmail(String docEmail) {
         DocEmail = docEmail;
@@ -39,7 +45,7 @@ public class DoctorDataModel {
     }
 
     public String getDocBio() {
-        return DocBio;
+        return  DocBio;
     }
 
     public void setDocBio(String docBio) {
@@ -68,35 +74,53 @@ public class DoctorDataModel {
         this.profileURL = profileURL;
     }
 
-    public ArrayList<Map<String, Object>> getSunday() {
-        return Sunday;
-    }
-
-    public void setSunday(ArrayList<Map<String, Object>> sunday) {
-        Sunday = sunday;
-    }
-
-    public ArrayList<Map<String, Object>> getMonday() {
-        return Monday;
-    }
-
-    public void setMonday(ArrayList<Map<String, Object>> monday) {
-        Monday = monday;
-    }
-
-    public  ArrayList<Map<String, String>> getDocAppts(){
-        System.out.println("Calling this?");
-        if(getSunday()!= null){
-            for (Map<String, Object> appointment : getSunday()) {
-                if(!(boolean)appointment.get("isAvailable")){
-                    Map<String, String> appt = new HashMap<>();
-                    appt.put("patientID", appointment.get("AppointmentID").toString());
-                    appt.put("time", appointment.get("Time").toString());
-                    DoctorAppointments.add(appt);
-                }
-            }
+    public ArrayList<String> getWardName() {
+        if(WardName==null){
+            WardName.add("Doctor do not belong to any ward at the moment.");
         }
-        System.out.println("Anything?? "+DoctorAppointments);
-        return DoctorAppointments;
+        return WardName;
     }
+
+    public void setWardName(ArrayList<String> wardName) {
+        WardName = wardName;
+    }
+
+    /**/
+    /*
+
+    NAME
+
+            GetDocWardAsString - covers Doctor's ward list to a string
+
+    SYNOPSIS
+
+            public String GetDocWardAsString()
+
+    DESCRIPTION
+
+            This function covers Doctor's ward list to a properly formatted string
+            and returns the string
+
+    RETURNS
+
+            String: Doctor's wards
+
+    AUTHOR
+
+            Sibika Silwal
+
+    DATE
+
+            2:30pm 08/05/2021
+
+    */
+    /**/
+    public String GetDocWardAsString(){
+        String DoctorWards = "Wards Doctor is in.";
+        for(Object ward : getWardName()){
+            DoctorWards = DoctorWards.concat("\n"+ward.toString()) ;
+        }
+        return DoctorWards;
+    }
+
 }
