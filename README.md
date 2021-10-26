@@ -66,7 +66,7 @@ doctors circular.
 
 Screenshots:
 
-![image](https://user-images.githubusercontent.com/61360634/138883204-3fc2f79c-8410-4c8e-8151-827f7ac436b2.png)
+
 ![Screenshot_2021-08-17-15-20-18-21_d1401e1c6cdff892a37b19c75882404f](https://user-images.githubusercontent.com/61360634/138883369-f2226985-a39e-4db6-b063-7825df3ecc6a.jpg)
 ![Screenshot_2021-08-17-15-29-02-65_d1401e1c6cdff892a37b19c75882404f](https://user-images.githubusercontent.com/61360634/138883487-167eb9eb-f1dc-4293-bdc1-cfdf9f162558.jpg)
 
