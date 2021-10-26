@@ -77,6 +77,10 @@ Admin Home             |  User Home
 :-------------------------:|:-------------------------:
 <img src="https://user-images.githubusercontent.com/61360634/138883512-c1623a9f-8904-4e62-b16b-4f093b494de8.jpg" width="270" height="auto">      |      <img src="https://user-images.githubusercontent.com/61360634/138888009-42b2fa8c-13ac-495a-a1d0-fd003cd2a78c.jpg" width="270" height="auto">
 
+<p float="left">
+  <img src="https://user-images.githubusercontent.com/61360634/138883369-f2226985-a39e-4db6-b063-7825df3ecc6a.jpg" width="270" height="auto">
+  <img src="https://user-images.githubusercontent.com/61360634/138883487-167eb9eb-f1dc-4293-bdc1-cfdf9f162558.jpg" width="270" height="auto">
+</p>
 
 
 <img src="https://user-images.githubusercontent.com/61360634/138883512-c1623a9f-8904-4e62-b16b-4f093b494de8.jpg" width="270" height="auto">
