@@ -79,6 +79,7 @@ Admin Home             |  User Home
 
 <p float="left">
   <img src="https://user-images.githubusercontent.com/61360634/138883369-f2226985-a39e-4db6-b063-7825df3ecc6a.jpg" width="270" height="auto">
+  &nbsp; &nbsp; &nbsp; &nbsp;
   <img src="https://user-images.githubusercontent.com/61360634/138883487-167eb9eb-f1dc-4293-bdc1-cfdf9f162558.jpg" width="270" height="auto">
 </p>
 
