@@ -70,7 +70,7 @@ doctors circular.
 ### Screenshots:
 
 
-![Screenshot_2021-08-17-15-20-18-21_d1401e1c6cdff892a37b19c75882404f](https://user-images.githubusercontent.com/61360634/138883369-f2226985-a39e-4db6-b063-7825df3ecc6a.jpg | width=100)
+![Screenshot_2021-08-17-15-20-18-21_d1401e1c6cdff892a37b19c75882404f](https://user-images.githubusercontent.com/61360634/138883369-f2226985-a39e-4db6-b063-7825df3ecc6a.jpg){:height="50%" width="50%"}
 ![Screenshot_2021-08-17-15-29-02-65_d1401e1c6cdff892a37b19c75882404f](https://user-images.githubusercontent.com/61360634/138883487-167eb9eb-f1dc-4293-bdc1-cfdf9f162558.jpg)
 
 ![Screenshot_2021-08-17-15-30-14-74_d1401e1c6cdff892a37b19c75882404f](https://user-images.githubusercontent.com/61360634/138883512-c1623a9f-8904-4e62-b16b-4f093b494de8.jpg)
