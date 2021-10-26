@@ -93,11 +93,12 @@ doctors circular.
   <img src="https://user-images.githubusercontent.com/61360634/138883588-2f6b1c25-8825-4e38-a7a7-908561c3652a.jpg" width="270" height="auto">
 </p>
 
-
-<img src="https://user-images.githubusercontent.com/61360634/138883615-7acf452d-0bc0-4c33-90d6-dfd6f997a881.jpg" width="270" height="auto">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-<img src="https://user-images.githubusercontent.com/61360634/138883693-d91b8248-dada-4f3d-8ac3-4c7070c1631d.jpg" width="270" height="auto">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<p float="left">
+  <img src="https://user-images.githubusercontent.com/61360634/138883615-7acf452d-0bc0-4c33-90d6-dfd6f997a881.jpg" width="270" height="auto">
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="https://user-images.githubusercontent.com/61360634/138883693-d91b8248-dada-4f3d-8ac3-4c7070c1631d.jpg" width="270" height="auto">
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="https://user-images.githubusercontent.com/61360634/138892146-754f9cfb-67b2-4cb5-95cc-af9648dc4e34.jpg" width="270" height="auto">
 </p>
 
 <p float="left">
