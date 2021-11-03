@@ -1,4 +1,4 @@
-# Senior-Project-Hope-Hospital-App
+# Hope-Hospital-App
 
 Hope Hospital App is an android application that helps hospitals achieve automation in their basic to mid-level processes which would otherwise require manpower. 
 This application has two interfaces:
